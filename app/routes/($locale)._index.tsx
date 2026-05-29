@@ -74,10 +74,10 @@ const VIDEO_ID = '98152a68a970f7a76d6a2579baae14dc';
 
 function HeroSection() {
   return (
-    <section className="hero relative w-full h-screen bg-black overflow-hidden">
+    <section className="hero relative w-full h-[90vh] bg-black overflow-hidden">
       <iframe
         src={`https://customer-b6g02vkp783khfb7.cloudflarestream.com/${VIDEO_ID}/iframe?autoplay=true&loop=true&muted=true&controls=false`}
-        className="absolute top-0 left-1/2 -translate-x-1/2 border-none w-[max(100vw,177.78vh)] h-[max(100vh,56.25vw)]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-none w-[max(100vw,160vh)] h-[max(90vh,56.25vw)]"
         allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
         allowFullScreen
       />

@@ -42,7 +42,11 @@ export function Header({
       className="header"
       style={
         solid
-          ? {background: '#fff', color: '#000', boxShadow: '0 1px 0 rgba(0,0,0,0.08)'}
+          ? {
+              background: '#fff',
+              color: '#000',
+              boxShadow: '0 1px 0 rgba(0,0,0,0.08)',
+            }
           : undefined
       }
     >
@@ -59,25 +63,15 @@ export function Header({
           xmlns="http://www.w3.org/2000/svg"
         >
           <text
-            x="22"
-            y="102"
+            x="450"
+            y="130"
             fill="currentColor"
             fontSize="82"
             fontFamily="Arial, sans-serif"
-            fontWeight="normal"
-          >
-            [ÁNIMO] RUN CLUB
-          </text>
-          <text
-            x="450"
-            y="168"
-            fill="currentColor"
-            fontSize="52"
-            fontFamily="Arial, sans-serif"
-            fontWeight="normal"
+            fontWeight="bold"
             textAnchor="middle"
           >
-            EST. 2025
+            [ÁNIMO] RUN CLUB
           </text>
         </svg>
       </NavLink>
