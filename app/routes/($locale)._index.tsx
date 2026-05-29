@@ -63,9 +63,31 @@ export default function Homepage() {
   return (
     <div className="home">
       {data.isShopLinked ? null : <MockShopNotice />}
+      <HeroSection />
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
+  );
+}
+
+function HeroSection() {
+  return (
+    <section className="hero" aria-label="Hero">
+      <div className="hero-video-placeholder">
+        <div className="hero-video-placeholder-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <polygon points="5,3 19,12 5,21" />
+          </svg>
+        </div>
+        <span className="hero-video-placeholder-label">Video placeholder</span>
+      </div>
+    </section>
   );
 }
 

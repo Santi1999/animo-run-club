@@ -45,7 +45,7 @@ export function PageLayout({
           publicStoreDomain={publicStoreDomain}
         />
       )}
-      <main>{children}</main>
+      <main style={{paddingTop: 'var(--header-height)'}}>{children}</main>
       <Footer
         footer={footer}
         header={header}
