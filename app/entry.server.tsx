@@ -19,6 +19,10 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+    frameSrc: [
+      "'self'",
+      'https://customer-b6g02vkp783khfb7.cloudflarestream.com',
+    ],
   });
 
   const body = await renderToReadableStream(

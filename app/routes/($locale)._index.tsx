@@ -70,23 +70,17 @@ export default function Homepage() {
   );
 }
 
+const VIDEO_ID = '98152a68a970f7a76d6a2579baae14dc';
+
 function HeroSection() {
   return (
-    <section className="hero" aria-label="Hero">
-      <div className="hero-video-placeholder">
-        <div className="hero-video-placeholder-icon">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <polygon points="5,3 19,12 5,21" />
-          </svg>
-        </div>
-        <span className="hero-video-placeholder-label">Video placeholder</span>
-      </div>
+    <section className="hero relative w-full h-screen bg-black overflow-hidden">
+      <iframe
+        src={`https://customer-b6g02vkp783khfb7.cloudflarestream.com/${VIDEO_ID}/iframe?autoplay=true&loop=true&muted=true&controls=false`}
+        className="absolute top-0 left-1/2 -translate-x-1/2 border-none w-[max(100vw,177.78vh)] h-[max(100vh,56.25vw)]"
+        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+        allowFullScreen
+      />
     </section>
   );
 }

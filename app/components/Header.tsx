@@ -1,5 +1,5 @@
 import {Suspense, useState, useEffect} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
+import {Await, NavLink, useAsyncValue, useLocation} from 'react-router';
 import {
   type CartViewPayload,
   useAnalytics,
@@ -24,24 +24,62 @@ export function Header({
   publicStoreDomain,
 }: HeaderProps) {
   const {shop} = header;
+  const {pathname} = useLocation();
+  const isHome = pathname === '/' || /^\/[a-z]{2}-[a-z]{2}\/?$/i.test(pathname);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
+    handleScroll();
     window.addEventListener('scroll', handleScroll, {passive: true});
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const solid = !isHome || scrolled;
+
   return (
-    <header className={`header${scrolled ? ' header--scrolled' : ''}`}>
+    <header
+      className="header"
+      style={
+        solid
+          ? {background: '#fff', color: '#000', boxShadow: '0 1px 0 rgba(0,0,0,0.08)'}
+          : undefined
+      }
+    >
       <div className="header-left">
         <HeaderMenuMobileToggle />
         <SearchToggle />
       </div>
 
       <NavLink prefetch="intent" to="/" className="header-brand" end>
-        <span className="header-brand-name">[ÁNIMO] RUN CLUB</span>
-        <span className="header-brand-tagline">EST. 2025</span>
+        <svg
+          viewBox="0 0 900 206.25"
+          style={{height: '48px', width: 'auto'}}
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <text
+            x="22"
+            y="102"
+            fill="currentColor"
+            fontSize="82"
+            fontFamily="Arial, sans-serif"
+            fontWeight="normal"
+          >
+            [ÁNIMO] RUN CLUB
+          </text>
+          <text
+            x="450"
+            y="168"
+            fill="currentColor"
+            fontSize="52"
+            fontFamily="Arial, sans-serif"
+            fontWeight="normal"
+            textAnchor="middle"
+          >
+            EST. 2025
+          </text>
+        </svg>
       </NavLink>
 
       <div className="header-right">
