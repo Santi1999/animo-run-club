@@ -174,7 +174,7 @@ aside li {
   transition: opacity 400ms ease-in-out;
   transition: opacity 400ms;
   visibility: hidden;
-  z-index: 10;
+  z-index: 200;
 }
 
 .overlay .close-outside {
@@ -245,7 +245,7 @@ button.reset:hover:not(:has(> *)) {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 50;
+  z-index: 100;
   transition: background 300ms ease, color 300ms ease, box-shadow 300ms ease;
 }
 
@@ -488,11 +488,44 @@ button.reset:hover:not(:has(> *)) {
 * --------------------------------------------------
 */
 .hero {
+  position: relative;
+  z-index: 1;
+  height: 90vh;
+  padding: 0;
   margin-top: calc(-1 * var(--header-height));
-  /* break out of body > main 1rem side margins */
   margin-left: -1rem;
   margin-right: -1rem;
   width: calc(100% + 2rem);
+  background: #000;
+  overflow: hidden;
+  /* Remove the entire hero section from the pointer-event hit-test tree so
+     clicks and wheel-scroll events pass through to the document and the fixed
+     header buttons above rather than being swallowed by the cross-origin iframe. */
+  pointer-events: none;
+}
+
+.hero iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100vw, calc(90vh * 16 / 9));
+  height: max(90vh, calc(100vw * 9 / 16));
+  border: none;
+  pointer-events: none;
+}
+
+/* Transparent shield that sits in front of the iframe inside the hero's
+   stacking context. pointer-events: auto explicitly overrides the inherited
+   pointer-events: none from .hero so Safari never routes events into the
+   cross-origin iframe browsing context. Scroll events on this div bubble
+   to the body and scroll the page normally. */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: transparent;
+  pointer-events: auto;
 }
 
 /*

@@ -1,5 +1,5 @@
 import {Await, Link} from 'react-router';
-import {Suspense, useId} from 'react';
+import {Suspense, useId, useState} from 'react';
 import type {
   CartApiQueryFragment,
   HeaderQuery,
@@ -8,6 +8,7 @@ import {Aside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
+import {CookieModal} from '~/components/CookieModal';
 import {
   SEARCH_ENDPOINT,
   SearchFormPredictive,
@@ -29,6 +30,8 @@ export function PageLayout({
   isLoggedIn,
   publicStoreDomain,
 }: PageLayoutProps) {
+  const [cookieModalOpen, setCookieModalOpen] = useState(false);
+
   return (
     <Aside.Provider>
       <CartAside cart={cart} />
@@ -43,7 +46,11 @@ export function PageLayout({
         />
       )}
       <main style={{paddingTop: 'var(--header-height)'}}>{children}</main>
-      <Footer />
+      <Footer onOpenCookieSettings={() => setCookieModalOpen(true)} />
+      <CookieModal
+        isOpen={cookieModalOpen}
+        onClose={() => setCookieModalOpen(false)}
+      />
     </Aside.Provider>
   );
 }

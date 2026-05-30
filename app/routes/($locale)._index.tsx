@@ -74,13 +74,17 @@ const VIDEO_ID = '98152a68a970f7a76d6a2579baae14dc';
 
 function HeroSection() {
   return (
-    <section className="hero relative w-full h-[90vh] bg-black overflow-hidden">
+    <section className="hero" aria-hidden="true">
       <iframe
         src={`https://customer-b6g02vkp783khfb7.cloudflarestream.com/${VIDEO_ID}/iframe?autoplay=true&loop=true&muted=true&controls=false`}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-none w-[max(100vw,160vh)] h-[max(90vh,56.25vw)]"
         allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-        allowFullScreen
+        title="Background video"
       />
+      {/* Safari ignores pointer-events:none on cross-origin iframes. This
+          transparent overlay sits in front of the iframe so Safari never
+          hits the iframe's browsing context, while scroll events bubble up
+          through the DOM to the body so the page still scrolls normally. */}
+      <div className="hero-overlay" />
     </section>
   );
 }
