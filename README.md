@@ -40,6 +40,37 @@ npm run build
 npm run dev
 ```
 
+## Deploying to Cloudflare
+
+**First-time setup:**
+
+1. Authenticate with Cloudflare:
+
+```bash
+npx wrangler login
+```
+
+2. Link your Hydrogen storefront:
+
+```bash
+npx shopify hydrogen link
+```
+
+**Deploy:**
+
+```bash
+npx shopify hydrogen deploy
+```
+
+This will build and deploy your project to Cloudflare Workers automatically.
+
+Alternatively, you can build and deploy separately using Wrangler directly:
+
+```bash
+npm run build
+npx wrangler deploy --config dist/ssr/wrangler.json
+```
+
 ## Setup for using Customer Account API (`/account` section)
 
 Follow step 1 and 2 of <https://shopify.dev/docs/custom-storefronts/building-with-the-customer-account-api/hydrogen#step-1-set-up-a-public-domain-for-local-development>
