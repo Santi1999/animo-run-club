@@ -1,6 +1,6 @@
 import {Await, useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/_index';
-import {Suspense} from 'react';
+import {Suspense, useState} from 'react';
 import {Image} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
@@ -8,6 +8,10 @@ import type {
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
+import {
+  DropAnnouncementPopup,
+  getDropPopupState,
+} from '~/components/DropAnnouncementPopup';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -20,7 +24,9 @@ export async function loader(args: Route.LoaderArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  const popupState = getDropPopupState(args.request);
+
+  return {...deferredData, ...criticalData, ...popupState};
 }
 
 /**
@@ -60,12 +66,18 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
+  const [popupOpen, setPopupOpen] = useState(data.showDropPopup);
+
   return (
     <div className="home">
       {data.isShopLinked ? null : <MockShopNotice />}
       <HeroSection />
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
+      <DropAnnouncementPopup
+        open={popupOpen}
+        onClose={() => setPopupOpen(false)}
+      />
     </div>
   );
 }

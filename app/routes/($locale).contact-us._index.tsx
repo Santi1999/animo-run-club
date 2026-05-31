@@ -10,29 +10,36 @@ export default function ContactUsPage() {
     <div className="px-8 sm:px-12 lg:px-16 py-12 max-w-2xl">
       <h1 className="text-2xl font-bold mb-4">Contact us</h1>
       <p className="text-gray-500 text-sm leading-relaxed mb-8">
-        Please contact our Client Service as follows: By phone at 1-877-997-7232
-        (from Monday to Saturday from 9 am to 10 pm and on Sunday from 9 am to
-        8 pm, Eastern Standard Time); By e-mail at{' '}
-        <a
-          href="mailto:contact@animorunclub.com"
-          className="underline"
-        >
+        Please contact our Client Service: (from Monday to Saturday from 9 am to
+        10 pm and on Sunday from 9 am to 8 pm, Eastern Standard Time); By e-mail
+        at{' '}
+        <a href="mailto:contact@animorunclub.com" className="underline">
           contact@animorunclub.com
-        </a>{' '}
-        or per livechat.
+        </a>
+        {'. '}
       </p>
 
       {/* Contact channel boxes */}
-      <div className="flex flex-col gap-3 mb-12">
-        <button
-          type="button"
+      <div className="flex flex-col gap-3 mb-12 pt-5">
+        <a
+          href="https://chat.whatsapp.com/GHU7Zm7FVSpEcKoc3UPtOS?s=sh&p=i&ilr=2"
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center justify-between w-full border border-gray-200 px-6 py-5 hover:bg-gray-50 transition-colors text-left"
         >
-          <span className="text-sm font-medium">WhatsApp</span>
-          <img src={whatsappIcon} alt="" aria-hidden="true" width={24} height={24} />
-        </button>
+          <span className="text-sm font-medium">
+            Join Our Run Club - WhatsApp
+          </span>
+          <img
+            src={whatsappIcon}
+            alt=""
+            aria-hidden="true"
+            width={24}
+            height={24}
+          />
+        </a>
 
-        <button
+        {/* <button
           type="button"
           className="flex items-center justify-between w-full border border-gray-200 px-6 py-5 hover:bg-gray-50 transition-colors text-left"
         >
@@ -60,13 +67,16 @@ export default function ContactUsPage() {
               strokeLinejoin="round"
             />
           </svg>
-        </button>
+        </button> */}
       </div>
 
       <form className="flex flex-col gap-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="flex flex-col gap-1">
-            <label htmlFor="firstName" className="text-xs font-semibold tracking-wide uppercase">
+            <label
+              htmlFor="firstName"
+              className="text-xs font-semibold tracking-wide uppercase"
+            >
               First Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -78,7 +88,10 @@ export default function ContactUsPage() {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label htmlFor="lastName" className="text-xs font-semibold tracking-wide uppercase">
+            <label
+              htmlFor="lastName"
+              className="text-xs font-semibold tracking-wide uppercase"
+            >
               Last Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -92,7 +105,10 @@ export default function ContactUsPage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="email" className="text-xs font-semibold tracking-wide uppercase">
+          <label
+            htmlFor="email"
+            className="text-xs font-semibold tracking-wide uppercase"
+          >
             Email Address <span className="text-red-500">*</span>
           </label>
           <input
@@ -105,7 +121,10 @@ export default function ContactUsPage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="subject" className="text-xs font-semibold tracking-wide uppercase">
+          <label
+            htmlFor="subject"
+            className="text-xs font-semibold tracking-wide uppercase"
+          >
             Subject <span className="text-red-500">*</span>
           </label>
           <select
@@ -124,7 +143,10 @@ export default function ContactUsPage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="message" className="text-xs font-semibold tracking-wide uppercase">
+          <label
+            htmlFor="message"
+            className="text-xs font-semibold tracking-wide uppercase"
+          >
             Message <span className="text-red-500">*</span>
           </label>
           <textarea

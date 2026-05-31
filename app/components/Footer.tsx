@@ -1,6 +1,6 @@
 import {ChevronDown} from 'lucide-react';
 import {useState} from 'react';
-import {Link} from 'react-router';
+import {Link, useFetcher} from 'react-router';
 
 export function Footer({
   onOpenCookieSettings,
@@ -8,6 +8,9 @@ export function Footer({
   onOpenCookieSettings?: () => void;
 }) {
   const [openSection, setOpenSection] = useState<string | null>(null);
+  const newsletter = useFetcher<{success?: boolean; error?: string}>();
+  const newsletterSuccess = newsletter.data?.success;
+  const newsletterError = newsletter.data?.error;
 
   const toggleSection = (section: string) => {
     setOpenSection(openSection === section ? null : section);
@@ -23,30 +26,54 @@ export function Footer({
             <h3 className="text-xs font-semibold mb-4 tracking-wide">
               SUBSCRIBE TO OUR NEWSLETTER
             </h3>
-            <form className="mb-6">
-              <div className="flex items-center border-b border-black pb-1">
-                <input
-                  type="email"
-                  placeholder="Insert your e-mail address *"
-                  className="flex-1 bg-transparent text-sm outline-none focus:outline-none focus:ring-0 placeholder:text-gray-500"
-                />
-                <button type="submit" aria-label="Subscribe" className="ml-2">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    className="text-black"
+            {newsletterSuccess ? (
+              <p className="text-sm font-medium mb-6">
+                Thanks for subscribing! We&apos;ll be in touch.
+              </p>
+            ) : (
+              <newsletter.Form
+                method="post"
+                action="/newsletter/subscribe"
+                className="mb-6"
+              >
+                <div className="flex items-center border-b border-black pb-1">
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+                    title="Please enter a valid email address"
+                    placeholder="Insert your e-mail address *"
+                    className="flex-1 bg-transparent text-sm outline-none focus:outline-none focus:ring-0 placeholder:text-gray-500"
+                  />
+                  <button
+                    type="submit"
+                    disabled={newsletter.state === 'submitting'}
+                    aria-label="Subscribe"
+                    className="ml-2 disabled:opacity-50"
                   >
-                    <path
-                      d="M4 10h12M12 6l4 4-4 4"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </form>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      className="text-black"
+                    >
+                      <path
+                        d="M4 10h12M12 6l4 4-4 4"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                {newsletterError && (
+                  <p className="text-sm text-red-600 mt-2">
+                    {newsletterError}
+                  </p>
+                )}
+              </newsletter.Form>
+            )}
             <p className="text-xs text-gray-600 leading-relaxed mb-6">
               By clicking on &quot;Subscribe&quot;, you confirm that you have
               read and understood our{' '}
@@ -158,9 +185,9 @@ export function Footer({
             <div>
               <button
                 onClick={() => toggleSection('contact')}
-                className="md:cursor-default flex items-center justify-between w-full md:pointer-events-none"
+                className="md:cursor-default flex items-center justify-between w-full md:pointer-events-none mb-4"
               >
-                <h3 className="text-xs font-semibold mb-4 tracking-wide">
+                <h3 className="text-xs font-semibold tracking-wide">
                   CONTACT US
                 </h3>
                 <ChevronDown
@@ -240,9 +267,9 @@ export function Footer({
             <div>
               <button
                 onClick={() => toggleSection('company')}
-                className="md:cursor-default flex items-center justify-between w-full md:pointer-events-none"
+                className="md:cursor-default flex items-center justify-between w-full md:pointer-events-none mb-4"
               >
-                <h3 className="text-xs font-semibold mb-4 tracking-wide">
+                <h3 className="text-xs font-semibold tracking-wide">
                   COMPANY
                 </h3>
                 <ChevronDown
@@ -287,9 +314,9 @@ export function Footer({
             <div>
               <button
                 onClick={() => toggleSection('legal')}
-                className="md:cursor-default flex items-center justify-between w-full md:pointer-events-none"
+                className="md:cursor-default flex items-center justify-between w-full md:pointer-events-none mb-4"
               >
-                <h3 className="text-xs font-semibold mb-4 tracking-wide">
+                <h3 className="text-xs font-semibold tracking-wide">
                   LEGAL TERMS AND CONDITIONS
                 </h3>
                 <ChevronDown
