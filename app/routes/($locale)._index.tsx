@@ -14,7 +14,18 @@ import {
 } from '~/components/DropAnnouncementPopup';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Ánimo | Home'}];
+  return [
+    {title: 'Ánimo | Home'},
+    {name: 'description', content: 'Built on community, spirit, and movement — performance apparel for every runner.'},
+    {property: 'og:title', content: 'Ánimo | Performance Apparel'},
+    {property: 'og:description', content: 'Built on community, spirit, and movement — performance apparel for every runner.'},
+    {property: 'og:image', content: 'https://cdn.shopify.com/s/files/1/0670/7930/7470/files/2.png?v=1780311878'},
+    {property: 'og:type', content: 'website'},
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: 'Ánimo | Performance Apparel'},
+    {name: 'twitter:description', content: 'Built on community, spirit, and movement — performance apparel for every runner.'},
+    {name: 'twitter:image', content: 'https://cdn.shopify.com/s/files/1/0670/7930/7470/files/2.png?v=1780311878'},
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {

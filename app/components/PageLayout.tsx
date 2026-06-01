@@ -8,6 +8,7 @@ import {Aside, useAside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
+import {CookieBanner} from '~/components/CookieBanner';
 import {CookieModal} from '~/components/CookieModal';
 import {SearchFormPredictive} from '~/components/SearchFormPredictive';
 
@@ -43,6 +44,10 @@ export function PageLayout({
       )}
       <main style={{paddingTop: 'var(--header-height)'}}>{children}</main>
       <Footer onOpenCookieSettings={() => setCookieModalOpen(true)} />
+      <CookieBanner
+        onOpenSettings={() => setCookieModalOpen(true)}
+        recheckTrigger={cookieModalOpen}
+      />
       <CookieModal
         isOpen={cookieModalOpen}
         onClose={() => setCookieModalOpen(false)}

@@ -1,7 +1,18 @@
 import type {Route} from './+types/pages.about';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'About Us | Animo Run Club'}];
+  return [
+    {title: 'About Us | Animo Run Club'},
+    {name: 'description', content: 'A safe and inclusive community celebrating movement, gratitude, and shared effort — more than miles, we build spirit and well-being.'},
+    {property: 'og:title', content: 'Ánimo | Performance Apparel'},
+    {property: 'og:description', content: 'A safe and inclusive community celebrating movement, gratitude, and shared effort — more than miles, we build spirit and well-being.'},
+    {property: 'og:image', content: 'https://cdn.shopify.com/s/files/1/0670/7930/7470/files/2.png?v=1780311878'},
+    {property: 'og:type', content: 'website'},
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: 'Ánimo | Performance Apparel'},
+    {name: 'twitter:description', content: 'A safe and inclusive community celebrating movement, gratitude, and shared effort — more than miles, we build spirit and well-being.'},
+    {name: 'twitter:image', content: 'https://cdn.shopify.com/s/files/1/0670/7930/7470/files/2.png?v=1780311878'},
+  ];
 };
 
 export default function AboutPage() {
