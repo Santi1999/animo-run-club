@@ -295,7 +295,7 @@ export function Footer({
                 </Link>
               </li> */}
                 <li>
-                  <Link to="/" className="hover:opacity-70 transition-opacity">
+                  <Link to="/pages/about" className="hover:opacity-70 transition-opacity">
                     About Us
                   </Link>
                 </li>

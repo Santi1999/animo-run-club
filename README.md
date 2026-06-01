@@ -56,6 +56,22 @@ npx wrangler login
 npx shopify hydrogen link
 ```
 
+3. Load secrets to the worker:
+
+```bash
+echo "<value>" | npx wrangler secret put PUBLIC_STOREFRONT_API_TOKEN --name animo-run-club
+echo "<value>" | npx wrangler secret put PUBLIC_STORE_DOMAIN --name animo-run-club
+echo "<value>" | npx wrangler secret put PUBLIC_STOREFRONT_ID --name animo-run-club
+echo "<value>" | npx wrangler secret put PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID --name animo-run-club
+echo "<value>" | npx wrangler secret put PUBLIC_CUSTOMER_ACCOUNT_API_URL --name animo-run-club
+echo "<value>" | npx wrangler secret put SHOP_ID --name animo-run-club
+echo "<value>" | npx wrangler secret put PRIVATE_STOREFRONT_API_TOKEN --name animo-run-club
+echo "<value>" | npx wrangler secret put SESSION_SECRET --name animo-run-club
+echo "<value>" | npx wrangler secret put RESEND_API_KEY --name animo-run-club
+echo "<value>" | npx wrangler secret put RESEND_FROM_EMAIL --name animo-run-club
+echo "<value>" | npx wrangler secret put RESEND_TO_EMAIL --name animo-run-club
+```
+
 **Deploy:**
 
 ```bash
@@ -67,8 +83,7 @@ This will build and deploy your project to Cloudflare Workers automatically.
 Alternatively, you can build and deploy separately using Wrangler directly:
 
 ```bash
-npm run build
-npx wrangler deploy --config dist/ssr/wrangler.json
+npm run build && npx wrangler deploy
 ```
 
 ## Setup for using Customer Account API (`/account` section)

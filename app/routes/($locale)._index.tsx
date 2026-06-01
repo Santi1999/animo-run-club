@@ -14,7 +14,7 @@ import {
 } from '~/components/DropAnnouncementPopup';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [{title: 'Ánimo | Home'}];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -72,8 +72,8 @@ export default function Homepage() {
     <div className="home">
       {data.isShopLinked ? null : <MockShopNotice />}
       <HeroSection />
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+      {/* <FeaturedCollection collection={data.featuredCollection} /> */}
+      {/* <RecommendedProducts products={data.recommendedProducts} /> */}
       <DropAnnouncementPopup
         open={popupOpen}
         onClose={() => setPopupOpen(false)}
@@ -89,7 +89,7 @@ function HeroSection() {
     <section className="hero" aria-hidden="true">
       <iframe
         src={`https://customer-b6g02vkp783khfb7.cloudflarestream.com/${VIDEO_ID}/iframe?autoplay=true&loop=true&muted=true&controls=false`}
-        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
         title="Background video"
       />
       {/* Safari ignores pointer-events:none on cross-origin iframes. This
