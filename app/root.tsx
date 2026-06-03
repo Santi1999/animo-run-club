@@ -9,7 +9,10 @@ import {
   Scripts,
   ScrollRestoration,
   useRouteLoaderData,
+  useLocation,
 } from 'react-router';
+import {useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {HEADER_QUERY} from '~/lib/fragments';
@@ -17,6 +20,7 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindStyles from '~/styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import i18n, {localeToLanguage} from '~/i18n/config';
 
 export type RootLoader = typeof loader;
 
@@ -128,11 +132,31 @@ function loadDeferredData({context}: Route.LoaderArgs) {
   };
 }
 
+/**
+ * Reads the locale prefix from the URL and keeps i18next in sync.
+ */
+function useLocaleSync() {
+  const {pathname} = useLocation();
+  const firstSegment = pathname.split('/')[1]?.toUpperCase() ?? '';
+  const hasLocalePrefix = /^[A-Z]{2}-[A-Z]{2}$/.test(firstSegment);
+  const language = hasLocalePrefix ? firstSegment.split('-')[0] : 'EN';
+  const lng = localeToLanguage(language);
+
+  useEffect(() => {
+    if (i18n.language !== lng) {
+      i18n.changeLanguage(lng);
+    }
+  }, [lng]);
+
+  return lng;
+}
+
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
+  const lng = useLocaleSync();
 
   return (
-    <html lang="en">
+    <html lang={lng}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -173,6 +197,7 @@ export default function App() {
 
 export function ErrorBoundary() {
   const error = useRouteError();
+  const {t} = useTranslation();
   let errorMessage = 'Unknown error';
   let errorStatus = 500;
 
@@ -185,7 +210,7 @@ export function ErrorBoundary() {
 
   return (
     <div className="route-error">
-      <h1>Oops</h1>
+      <h1>{t('error.title')}</h1>
       <h2>{errorStatus}</h2>
       {errorMessage && (
         <fieldset>

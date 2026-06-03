@@ -1,12 +1,14 @@
 import {ChevronDown} from 'lucide-react';
 import {useState} from 'react';
-import {Link, useFetcher} from 'react-router';
+import {Link, useFetcher, useLocation} from 'react-router';
+import {Trans, useTranslation} from 'react-i18next';
 
 export function Footer({
   onOpenCookieSettings,
 }: {
   onOpenCookieSettings?: () => void;
 }) {
+  const {t} = useTranslation();
   const [openSection, setOpenSection] = useState<string | null>(null);
   const newsletter = useFetcher<{success?: boolean; error?: string}>();
   const newsletterSuccess = newsletter.data?.success;
@@ -24,11 +26,11 @@ export function Footer({
           {/* Newsletter Section */}
           <div className="lg:max-w-xs w-full">
             <h3 className="text-xs font-semibold mb-4 tracking-wide">
-              SUBSCRIBE TO OUR NEWSLETTER
+              {t('footer.newsletter_title')}
             </h3>
             {newsletterSuccess ? (
               <p className="text-sm font-medium mb-6">
-                Thanks for subscribing! We&apos;ll be in touch.
+                {t('footer.newsletter_thanks')}
               </p>
             ) : (
               <newsletter.Form
@@ -43,7 +45,7 @@ export function Footer({
                     required
                     pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
                     title="Please enter a valid email address"
-                    placeholder="Insert your e-mail address *"
+                    placeholder={t('footer.newsletter_placeholder')}
                     className="flex-1 bg-transparent text-sm outline-none focus:outline-none focus:ring-0 placeholder:text-gray-500"
                   />
                   <button
@@ -68,20 +70,17 @@ export function Footer({
                   </button>
                 </div>
                 {newsletterError && (
-                  <p className="text-sm text-red-600 mt-2">
-                    {newsletterError}
-                  </p>
+                  <p className="text-sm text-red-600 mt-2">{newsletterError}</p>
                 )}
               </newsletter.Form>
             )}
             <p className="text-xs text-gray-600 leading-relaxed mb-6">
-              By clicking on &quot;Subscribe&quot;, you confirm that you have
-              read and understood our{' '}
-              <Link to="/privacy-policy" className="underline">
-                Privacy Statement
-              </Link>{' '}
-              and that you want to receive the newsletter and other marketing
-              communication as set out therein.
+              <Trans
+                i18nKey="footer.newsletter_disclaimer"
+                components={{
+                  privacyLink: <Link to="/privacy-policy" className="underline" />,
+                }}
+              />
             </p>
 
             {/* Social Media Icons */}
@@ -188,7 +187,7 @@ export function Footer({
                 className="md:cursor-default flex items-center justify-between w-full md:pointer-events-none mb-4"
               >
                 <h3 className="text-xs font-semibold tracking-wide">
-                  CONTACT US
+                  {t('footer.contact_us')}
                 </h3>
                 <ChevronDown
                   className={`w-4 h-4 md:hidden transition-transform ${openSection === 'contact' ? 'rotate-180' : ''}`}
@@ -202,7 +201,7 @@ export function Footer({
                     to="/contact-us"
                     className="hover:opacity-70 transition-opacity"
                   >
-                    Write us on WhatsApp
+                    {t('footer.write_whatsapp')}
                   </Link>
                 </li>
                 <li>
@@ -210,7 +209,7 @@ export function Footer({
                     to="/contact-us"
                     className="hover:opacity-70 transition-opacity"
                   >
-                    Contact Us
+                    {t('footer.contact_link')}
                   </Link>
                 </li>
                 {/* <li>
@@ -269,9 +268,7 @@ export function Footer({
                 onClick={() => toggleSection('company')}
                 className="md:cursor-default flex items-center justify-between w-full md:pointer-events-none mb-4"
               >
-                <h3 className="text-xs font-semibold tracking-wide">
-                  COMPANY
-                </h3>
+                <h3 className="text-xs font-semibold tracking-wide">{t('footer.company')}</h3>
                 <ChevronDown
                   className={`w-4 h-4 md:hidden transition-transform ${openSection === 'company' ? 'rotate-180' : ''}`}
                 />
@@ -281,12 +278,12 @@ export function Footer({
               >
                 {/* <li>
                 <Link to="/" className="hover:opacity-70 transition-opacity">
-                  Fundacion Animo
+                  Fundacion Ánimo
                 </Link>
               </li>
               <li>
                 <Link to="/" className="hover:opacity-70 transition-opacity">
-                  Animo Group
+                  Ánimo Group
                 </Link>
               </li>
               <li>
@@ -295,8 +292,11 @@ export function Footer({
                 </Link>
               </li> */}
                 <li>
-                  <Link to="/pages/about" className="hover:opacity-70 transition-opacity">
-                    About Us
+                  <Link
+                    to="/pages/about"
+                    className="hover:opacity-70 transition-opacity"
+                  >
+                    {t('footer.about_us')}
                   </Link>
                 </li>
                 <li>
@@ -304,7 +304,7 @@ export function Footer({
                     to="/contact-us"
                     className="hover:opacity-70 transition-opacity"
                   >
-                    Work with us
+                    {t('footer.work_with_us')}
                   </Link>
                 </li>
               </ul>
@@ -317,7 +317,7 @@ export function Footer({
                 className="md:cursor-default flex items-center justify-between w-full md:pointer-events-none mb-4"
               >
                 <h3 className="text-xs font-semibold tracking-wide">
-                  LEGAL TERMS AND CONDITIONS
+                  {t('footer.legal_title')}
                 </h3>
                 <ChevronDown
                   className={`w-4 h-4 md:hidden transition-transform ${openSection === 'legal' ? 'rotate-180' : ''}`}
@@ -331,7 +331,7 @@ export function Footer({
                     to="/privacy-policy"
                     className="hover:opacity-70 transition-opacity"
                   >
-                    Privacy Statement
+                    {t('footer.privacy_statement')}
                   </Link>
                 </li>
                 <li>
@@ -339,7 +339,7 @@ export function Footer({
                     to="/cookie-policy"
                     className="hover:opacity-70 transition-opacity"
                   >
-                    Cookie Policy
+                    {t('footer.cookie_policy')}
                   </Link>
                 </li>
                 <li>
@@ -348,12 +348,12 @@ export function Footer({
                     onClick={onOpenCookieSettings}
                     className="hover:opacity-70 transition-opacity text-left"
                   >
-                    Cookie setting
+                    {t('footer.cookie_setting')}
                   </button>
                 </li>
                 <li>
                   <Link to="/" className="hover:opacity-70 transition-opacity">
-                    Terms of sale
+                    {t('footer.terms_of_sale')}
                   </Link>
                 </li>
                 <li>
@@ -363,7 +363,7 @@ export function Footer({
                     rel="noopener noreferrer"
                     className="hover:opacity-70 transition-opacity"
                   >
-                    Sitemap
+                    {t('footer.sitemap')}
                   </a>
                 </li>
               </ul>
@@ -378,7 +378,7 @@ export function Footer({
         <div className="px-8 sm:px-12 lg:px-16 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
             <div className="text-gray-600 font-medium">
-              &copy;&#193;NIMO 2025 - {new Date().getFullYear()}
+              &copy;[&#193;NIMO] 2025 - {new Date().getFullYear()}
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-8">
               {/* <button className="flex items-center gap-2 hover:opacity-70 transition-opacity"> */}
@@ -399,42 +399,16 @@ export function Footer({
                   STORE LOCATOR
                 </span>
               </button> */}
-              <button className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-                {/* Globe icon */}
-                <svg
-                  className="w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-                  <path d="M2 12h20" />
-                </svg>
-                <span className="text-xs font-semibold tracking-wide">
-                  SHIPPING TO: UNITED STATES/ENGLISH
-                </span>
-              </button>
+              <FooterLanguageSwitcher />
             </div>
           </div>
 
           <div className="text-center mt-4 text-xs text-gray-600">
             <Link
-              to="/"
+              to="/contact-us"
               className="hover:opacity-70 transition-opacity underline"
             >
-              California Consumer Privacy Act: Do not sell or share my personal
-              information
-            </Link>
-            <br />
-            <Link
-              to="/"
-              className="hover:opacity-70 transition-opacity underline"
-            >
-              Health Plan Cost Transparency Information
+              {t('footer.ccpa')}
             </Link>
           </div>
 
@@ -445,11 +419,62 @@ export function Footer({
               rel="noopener noreferrer"
               className="text-[10px] text-black/40 hover:text-black/60 transition-colors"
             >
-              Built by Varsa Studio
+              {t('footer.built_by')} Varsa Studio
             </a>
           </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+const LANGUAGES = [
+  {prefix: '', label: 'EN', locale: 'EN-US'},
+  {prefix: '/ES-US', label: 'ES', locale: 'ES-US'},
+];
+
+function FooterLanguageSwitcher() {
+  const {pathname, search} = useLocation();
+
+  const firstSegment = pathname.split('/')[1]?.toUpperCase() ?? '';
+  const hasLocalePrefix = /^[A-Z]{2}-[A-Z]{2}$/.test(firstSegment);
+  const currentLocale = hasLocalePrefix ? firstSegment : 'EN-US';
+  const pathWithoutLocale = hasLocalePrefix
+    ? '/' + pathname.split('/').slice(2).join('/')
+    : pathname;
+
+  return (
+    <div className="flex items-center gap-2">
+      <svg
+        className="w-4 h-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+        <path d="M2 12h20" />
+      </svg>
+      <div className="flex items-center gap-1 text-xs font-semibold tracking-wide">
+        {LANGUAGES.map((lang, i) => (
+          <span key={lang.locale} className="flex items-center gap-1">
+            {i > 0 && <span className="text-gray-400">|</span>}
+            {lang.locale === currentLocale ? (
+              <span>{lang.label}</span>
+            ) : (
+              <Link
+                to={`${lang.prefix}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}${search}`}
+                className="text-gray-400 hover:text-black transition-colors"
+              >
+                {lang.label}
+              </Link>
+            )}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }

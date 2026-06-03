@@ -5,6 +5,7 @@ import {
   useAnalytics,
   useOptimisticCart,
 } from '@shopify/hydrogen';
+import {useTranslation} from 'react-i18next';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 
@@ -128,10 +129,11 @@ export function HeaderMenu({
 
 function HeaderMenuMobileToggle() {
   const {open} = useAside();
+  const {t} = useTranslation();
   return (
     <button
       className="header-icon-btn reset"
-      aria-label="Open menu"
+      aria-label={t('header.open_menu')}
       onClick={() => open('mobile')}
     >
       <svg
@@ -154,10 +156,11 @@ function HeaderMenuMobileToggle() {
 
 function SearchToggle() {
   const {open} = useAside();
+  const {t} = useTranslation();
   return (
     <button
       className="header-icon-btn reset"
-      aria-label="Search"
+      aria-label={t('header.search')}
       onClick={() => open('search')}
     >
       <svg
@@ -284,15 +287,15 @@ function CartBanner() {
 const FALLBACK_HEADER_MENU = {
   id: 'gid://shopify/Menu/199655587896',
   items: [
-    {
-      id: 'gid://shopify/MenuItem/461609500728',
-      resourceId: null,
-      tags: [],
-      title: 'Collections',
-      type: 'HTTP',
-      url: '/collections',
-      items: [],
-    },
+    // {
+    //   id: 'gid://shopify/MenuItem/461609500728',
+    //   resourceId: null,
+    //   tags: [],
+    //   title: 'Collections',
+    //   type: 'HTTP',
+    //   url: '/collections',
+    //   items: [],
+    // },
     {
       id: 'gid://shopify/MenuItem/461609533496',
       resourceId: null,
