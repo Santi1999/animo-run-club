@@ -46,6 +46,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   return false;
 };
 
+
 /**
  * The main and reset stylesheets are added in the Layout component
  * to prevent a bug in development HMR updates.
