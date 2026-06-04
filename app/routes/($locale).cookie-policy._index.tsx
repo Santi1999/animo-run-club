@@ -1,11 +1,13 @@
 import {Link} from 'react-router';
 import type {Route} from './+types/cookie-policy._index';
+import {useLocalePrefix} from '~/lib/i18n';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Cookie Policy | Ánimo Run Club'}];
 };
 
 export default function CookiePolicyPage() {
+  const localePrefix = useLocalePrefix();
   return (
     <div className="px-8 sm:px-12 lg:px-16 py-12 max-w-3xl">
       <h1 className="text-2xl font-bold mb-2 tracking-wide">COOKIE POLICY</h1>
@@ -20,7 +22,7 @@ export default function CookiePolicyPage() {
         </p>
         <p>
           This policy should be read alongside our{' '}
-          <Link to="/privacy-policy" className="underline">
+          <Link to={`${localePrefix}/privacy-policy`} className="underline">
             Privacy Policy
           </Link>
           , which provides broader information about how we collect and process your personal data.
@@ -301,7 +303,7 @@ export default function CookiePolicyPage() {
           Some cookies we use may be associated with personal data (for example, if you are logged
           in to your Ánimo account). In those cases, the processing of that personal data is
           governed by our{' '}
-          <Link to="/privacy-policy" className="underline">
+          <Link to={`${localePrefix}/privacy-policy`} className="underline">
             Privacy Policy
           </Link>
           .
@@ -336,7 +338,7 @@ export default function CookiePolicyPage() {
           </li>
           <li>
             <strong>Contact form:</strong>{' '}
-            <Link to="/contact-us" className="underline">
+            <Link to={`${localePrefix}/contact-us`} className="underline">
               animorunclub.com/contact-us
             </Link>
           </li>

@@ -9,7 +9,9 @@ import {
   Scripts,
   ScrollRestoration,
   useRouteLoaderData,
+  useLocation,
 } from 'react-router';
+import {useEffect} from 'react';
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {HEADER_QUERY} from '~/lib/fragments';
@@ -17,6 +19,7 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindStyles from '~/styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import i18n, {localeToLanguage} from '~/i18n/config';
 
 export type RootLoader = typeof loader;
 
@@ -41,6 +44,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   // For more details see: https://remix.run/docs/en/main/route/should-revalidate
   return false;
 };
+
 
 /**
  * The main and reset stylesheets are added in the Layout component
@@ -128,11 +132,33 @@ function loadDeferredData({context}: Route.LoaderArgs) {
   };
 }
 
+/**
+ * Reads the locale prefix from the URL and keeps i18next in sync.
+ * The initial language is set before render in entry.client.tsx / entry.server.tsx,
+ * so this effect only runs on client-side SPA navigation.
+ */
+function useLocaleSync() {
+  const {pathname} = useLocation();
+  const firstSegment = pathname.split('/')[1]?.toUpperCase() ?? '';
+  const hasLocalePrefix = /^[A-Z]{2}-[A-Z]{2}$/.test(firstSegment);
+  const language = hasLocalePrefix ? firstSegment.split('-')[0] : 'EN';
+  const lng = localeToLanguage(language);
+
+  useEffect(() => {
+    if (i18n.language !== lng) {
+      i18n.changeLanguage(lng);
+    }
+  }, [lng]);
+
+  return lng;
+}
+
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
+  const lng = useLocaleSync();
 
   return (
-    <html lang="en">
+    <html lang={lng}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />

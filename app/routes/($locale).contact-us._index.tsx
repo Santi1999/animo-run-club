@@ -7,6 +7,7 @@ import {
   useNavigation,
   useSubmit,
 } from 'react-router';
+import {Trans, useTranslation} from 'react-i18next';
 import type {Route} from './+types/contact-us._index';
 import whatsappIcon from '~/assets/whatsapp.svg';
 
@@ -31,7 +32,7 @@ declare global {
 }
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Contact Us | Animo Run Club'}];
+  return [{title: 'Contact Us | Ánimo Run Club'}];
 };
 
 export function loader({context}: Route.LoaderArgs) {
@@ -156,6 +157,7 @@ export async function action({request, context}: Route.ActionArgs) {
 }
 
 export default function ContactUsPage() {
+  const {t} = useTranslation();
   const {turnstileSiteKey} = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
@@ -230,15 +232,14 @@ export default function ContactUsPage() {
 
   return (
     <div className="px-8 sm:px-12 lg:px-16 py-12 max-w-2xl">
-      <h1 className="text-2xl font-bold mb-4">Contact us</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('contact.heading')}</h1>
       <p className="text-gray-500 text-sm leading-relaxed mb-8">
-        Please contact our Client Service: (from Monday to Saturday from 9 am to
-        10 pm and on Sunday from 9 am to 8 pm, Eastern Standard Time); By e-mail
-        at{' '}
-        <a href="mailto:contact@animorunclub.com" className="underline">
-          contact@animorunclub.com
-        </a>
-        {'. '}
+        <Trans
+          i18nKey="contact.description"
+          components={{
+            emailLink: <a href="mailto:info@animorunclub.com" className="underline" />,
+          }}
+        />
       </p>
 
       {/* Contact channel boxes */}
@@ -250,7 +251,7 @@ export default function ContactUsPage() {
           className="flex items-center justify-between w-full border border-gray-200 px-6 py-5 hover:bg-gray-50 transition-colors text-left"
         >
           <span className="text-sm font-medium">
-            Join Our Run Club - WhatsApp
+            {t('contact.whatsapp_label')}
           </span>
           <img
             src={whatsappIcon}
@@ -294,7 +295,7 @@ export default function ContactUsPage() {
 
       {actionData?.success && (
         <div className="bg-green-50 border border-green-200 text-green-800 text-sm px-6 py-4 mb-6">
-          Thank you for your message. We&apos;ll get back to you shortly.
+          {t('contact.success_message')}
         </div>
       )}
 
@@ -326,7 +327,7 @@ export default function ContactUsPage() {
               htmlFor="firstName"
               className="text-xs font-semibold tracking-wide uppercase"
             >
-              First Name <span className="text-red-500">*</span>
+              {t('contact.first_name')} <span className="text-red-500">*</span>
             </label>
             <input
               id="firstName"
@@ -341,7 +342,7 @@ export default function ContactUsPage() {
               htmlFor="lastName"
               className="text-xs font-semibold tracking-wide uppercase"
             >
-              Last Name <span className="text-red-500">*</span>
+              {t('contact.last_name')} <span className="text-red-500">*</span>
             </label>
             <input
               id="lastName"
@@ -358,7 +359,7 @@ export default function ContactUsPage() {
             htmlFor="email"
             className="text-xs font-semibold tracking-wide uppercase"
           >
-            Email Address <span className="text-red-500">*</span>
+            {t('contact.email_address')} <span className="text-red-500">*</span>
           </label>
           <input
             id="email"
@@ -374,7 +375,7 @@ export default function ContactUsPage() {
             htmlFor="subject"
             className="text-xs font-semibold tracking-wide uppercase"
           >
-            Subject <span className="text-red-500">*</span>
+            {t('contact.subject')} <span className="text-red-500">*</span>
           </label>
           {/* Shopify doesn't have a dedicated subject field — this value
               gets included as contact[subject] in the email body */}
@@ -384,16 +385,16 @@ export default function ContactUsPage() {
             required
             className="border-b border-gray-300 focus:border-black outline-none py-2 text-sm bg-transparent transition-colors appearance-none"
           >
-            <option value="">Select a topic</option>
-            <option value="Order Inquiry">Order Inquiry</option>
+            <option value="">{t('contact.select_topic')}</option>
+            <option value="Order Inquiry">{t('contact.subject_order')}</option>
             <option value="Shipping &amp; Delivery">
-              Shipping &amp; Delivery
+              {t('contact.subject_shipping')}
             </option>
             <option value="Returns &amp; Exchanges">
-              Returns &amp; Exchanges
+              {t('contact.subject_returns')}
             </option>
-            <option value="Product Question">Product Question</option>
-            <option value="Other">Other</option>
+            <option value="Product Question">{t('contact.subject_product')}</option>
+            <option value="Other">{t('contact.subject_other')}</option>
           </select>
         </div>
 
@@ -402,7 +403,7 @@ export default function ContactUsPage() {
             htmlFor="message"
             className="text-xs font-semibold tracking-wide uppercase"
           >
-            Message <span className="text-red-500">*</span>
+            {t('contact.message')} <span className="text-red-500">*</span>
           </label>
           <textarea
             id="message"
@@ -420,7 +421,7 @@ export default function ContactUsPage() {
           disabled={isSubmitting}
           className="self-start bg-black text-white text-xs font-semibold tracking-widest uppercase px-8 py-3 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? 'Sending...' : 'Send Message'}
+          {isSubmitting ? t('contact.sending') : t('contact.send_message')}
         </button>
       </Form>
     </div>

@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 type CookiePreferences = {
   preference: boolean;
@@ -40,6 +41,8 @@ export function CookieModal({isOpen, onClose}: CookieModalProps) {
   useEffect(() => {
     if (isOpen) setPrefs(loadPrefs());
   }, [isOpen]);
+
+  const {t} = useTranslation();
 
   if (!isOpen) return null;
 
@@ -88,11 +91,11 @@ export function CookieModal({isOpen, onClose}: CookieModalProps) {
             id="cookie-modal-title"
             className="text-base font-semibold tracking-wide"
           >
-            Cookie setting
+            {t('cookie_modal.title')}
           </h2>
           <button
             onClick={onClose}
-            aria-label="Close cookie settings"
+            aria-label={t('cookie_modal.close')}
             className="ml-4 flex-shrink-0 text-black hover:opacity-60 transition-opacity"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -110,14 +113,10 @@ export function CookieModal({isOpen, onClose}: CookieModalProps) {
           {/* Strictly necessary */}
           <div>
             <p className="text-sm font-semibold mb-2">
-              Strictly necessary cookies (always active)
+              {t('cookie_modal.strictly_necessary_title')}
             </p>
             <p className="text-xs text-gray-600 leading-relaxed">
-              Technical cookies are cookies that are strictly necessary for the
-              website to function or to allow you to take advantage of the
-              requested services and content. You can set your browser to block
-              or alert you about these cookies, but some parts of the site will
-              not then work.
+              {t('cookie_modal.strictly_necessary_desc')}
             </p>
           </div>
 
@@ -125,52 +124,38 @@ export function CookieModal({isOpen, onClose}: CookieModalProps) {
 
           {/* Preferences heading */}
           <p className="text-sm font-semibold leading-snug">
-            Set your preferences using the check box provided
+            {t('cookie_modal.preferences_heading')}
           </p>
 
           {/* Preference cookies */}
           <CookieRow
-            label="Preference cookies"
+            label={t('cookie_modal.preference_cookies')}
             value={prefs.preference}
             onChange={(v) => toggle('preference', v)}
           >
-            Functionality cookies enable the website to provide enhanced
-            functionality and personalisation according to the criteria that you
-            have selected (for example, the language or products selected for
-            purchase). If you do not allow these cookies then some or all of
-            these services may not function properly.
+            {t('cookie_modal.preference_cookies_desc')}
           </CookieRow>
 
           <hr className="border-gray-200" />
 
           {/* Statistics cookies */}
           <CookieRow
-            label="Statistics cookies"
+            label={t('cookie_modal.statistics_cookies')}
             value={prefs.statistics}
             onChange={(v) => toggle('statistics', v)}
           >
-            Analytical cookies are used to measure and analyse our website
-            audience (visitor volume, pages viewed, average browsing time, etc.).
-            All information these cookies collect is aggregated and therefore
-            anonymous. By accepting these cookies, you are helping us to improve
-            the performance of our website.
+            {t('cookie_modal.statistics_cookies_desc')}
           </CookieRow>
 
           <hr className="border-gray-200" />
 
           {/* Marketing cookies */}
           <CookieRow
-            label="Marketing cookies"
+            label={t('cookie_modal.marketing_cookies')}
             value={prefs.marketing}
             onChange={(v) => toggle('marketing', v)}
           >
-            These cookies are aimed at creating profiles relating to the user
-            and are used to show you promotional messages that are in line with
-            the preferences you have displayed while navigating on the network.
-            They do not store directly personal information, but are based on
-            uniquely identifying your browser and internet device. If you do not
-            allow these cookies, you will experience less targeted advertising as
-            you browse the Internet.
+            {t('cookie_modal.marketing_cookies_desc')}
           </CookieRow>
         </div>
 
@@ -180,19 +165,19 @@ export function CookieModal({isOpen, onClose}: CookieModalProps) {
             onClick={handleSave}
             className="py-4 text-xs font-semibold tracking-wide bg-black text-white hover:bg-gray-800 transition-colors"
           >
-            SAVE PREFERENCES
+            {t('cookie_modal.save_preferences')}
           </button>
           <button
             onClick={handleRejectAll}
             className="py-4 text-xs font-semibold tracking-wide border-x border-gray-200 bg-white text-black hover:bg-gray-100 transition-colors"
           >
-            REJECT ALL
+            {t('cookie_modal.reject_all')}
           </button>
           <button
             onClick={handleAcceptAll}
             className="py-4 text-xs font-semibold tracking-wide bg-black text-white hover:bg-gray-800 transition-colors"
           >
-            ACCEPT ALL
+            {t('cookie_modal.accept_all')}
           </button>
         </div>
       </div>

@@ -27,6 +27,8 @@ export default defineConfig({
        * @see https://vitejs.dev/config/dep-optimization-options
        */
       include: [
+        'use-sync-external-store/shim',
+        'void-elements',
         'standardwebhooks',
         'react-router > set-cookie-parser',
         'react-router > cookie',
