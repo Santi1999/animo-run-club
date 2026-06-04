@@ -1,4 +1,5 @@
 import {NavLink, Outlet} from 'react-router';
+import {useLocalePrefix} from '~/lib/i18n';
 
 export default function ContactUsLayout() {
   return (
@@ -10,6 +11,7 @@ export default function ContactUsLayout() {
 }
 
 function ContactSubNav() {
+  const localePrefix = useLocalePrefix();
   const linkClass = ({isActive}: {isActive: boolean}) =>
     [
       'text-sm tracking-wide pb-3 border-b-2 transition-colors duration-150',
@@ -21,13 +23,13 @@ function ContactSubNav() {
   return (
     <div className="border-b border-gray-200 bg-white">
       <nav className="px-8 sm:px-12 lg:px-16 flex gap-8 pt-4">
-        <NavLink to="/contact-us" end className={linkClass}>
+        <NavLink to={`${localePrefix}/contact-us`} end className={linkClass}>
           Contact Us
         </NavLink>
-        <NavLink to="/contact-us/returns" className={linkClass}>
+        <NavLink to={`${localePrefix}/contact-us/returns`} className={linkClass}>
           Returns
         </NavLink>
-        <NavLink to="/contact-us/faq" className={linkClass}>
+        <NavLink to={`${localePrefix}/contact-us/faq`} className={linkClass}>
           FAQ
         </NavLink>
       </nav>

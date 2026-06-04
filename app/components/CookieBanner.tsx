@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
+import {useLocalePrefix} from '~/lib/i18n';
 
 const STORAGE_KEY = 'animo_cookie_preferences';
 
@@ -11,6 +12,8 @@ interface CookieBannerProps {
 
 export function CookieBanner({onOpenSettings, recheckTrigger}: CookieBannerProps) {
   const [visible, setVisible] = useState(false);
+  const {t} = useTranslation();
+  const localePrefix = useLocalePrefix();
 
   useEffect(() => {
     try {
@@ -53,8 +56,6 @@ export function CookieBanner({onOpenSettings, recheckTrigger}: CookieBannerProps
     onOpenSettings();
   };
 
-  const {t} = useTranslation();
-
   return (
     <div className="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -71,7 +72,7 @@ export function CookieBanner({onOpenSettings, recheckTrigger}: CookieBannerProps
               ),
               policyLink: (
                 <a
-                  href="/cookie-policy"
+                  href={`${localePrefix}/cookie-policy`}
                   className="underline hover:opacity-70 transition-opacity"
                 />
               ),

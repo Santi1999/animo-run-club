@@ -1,11 +1,13 @@
 import {Link} from 'react-router';
 import type {Route} from './+types/privacy-policy._index';
+import {useLocalePrefix} from '~/lib/i18n';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Privacy Policy | Ánimo Run Club'}];
 };
 
 export default function PrivacyPolicyPage() {
+  const localePrefix = useLocalePrefix();
   return (
     <div className="px-8 sm:px-12 lg:px-16 py-12 max-w-3xl">
       <h1 className="text-2xl font-bold mb-2 tracking-wide">PRIVACY POLICY</h1>
@@ -42,7 +44,7 @@ export default function PrivacyPolicyPage() {
           </li>
           <li>
             <strong>Contact page:</strong>{' '}
-            <Link to="/contact-us" className="underline">
+            <Link to={`${localePrefix}/contact-us`} className="underline">
               animorunclub.com/contact-us
             </Link>
           </li>
@@ -365,7 +367,7 @@ export default function PrivacyPolicyPage() {
           </li>
           <li>
             <strong>Contact form:</strong>{' '}
-            <Link to="/contact-us" className="underline">
+            <Link to={`${localePrefix}/contact-us`} className="underline">
               animorunclub.com/contact-us
             </Link>
           </li>

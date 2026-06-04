@@ -80,7 +80,8 @@
   "about": {
     "page_title": "Sobre Nosotros | Animo Run Club",
     "page_description": "Una comunidad segura e inclusiva que celebra el movimiento, la gratitud y el esfuerzo compartido — más que kilómetros, construimos espíritu y bienestar.",
-    "mission_title": "Nuestra Misión",
+    "mission_label": "Sobre [Ánimo]",
+    "mission_title": "Nuestra [Misión].",
     "mission_text": "[Ánimo] Run Club nace con la intención de crear un espacio seguro e inclusivo, donde la energía, el respeto y la comunidad se encuentran en cada paso. Fomentamos la convivencia saludable a través del movimiento, compartiendo la alegría de correr al aire libre sin importar el nivel o la experiencia. Nuestra misión es celebrar lo que nuestros cuerpos pueden hacer, ser agradecidos por cada día que podemos movernos y fortalecer lazos a través del esfuerzo compartido. Más que kilómetros, construimos comunidad, espíritu y bienestar.",
     "mission_bullet_1": "Creamos y cruzamos puentes — juntos",
     "mission_bullet_2": "Corremos con gratitud y avanzamos con espíritu",

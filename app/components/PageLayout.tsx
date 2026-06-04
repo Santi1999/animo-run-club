@@ -3,6 +3,7 @@ import {Suspense, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import type {CartApiQueryFragment, HeaderQuery} from 'storefrontapi.generated';
 import {Aside, useAside} from '~/components/Aside';
+import {useLocalePrefix} from '~/lib/i18n';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
@@ -124,6 +125,7 @@ function MobileMenuAside({
 }) {
   const {close, open} = useAside();
   const {t} = useTranslation();
+  const localePrefix = useLocalePrefix();
 
   if (!header.menu || !header.shop.primaryDomain?.url) return null;
 
@@ -245,7 +247,7 @@ function MobileMenuAside({
           Wishlist
         </NavLink> */}
         <NavLink
-          to="/contact-us"
+          to={`${localePrefix}/contact-us`}
           className="mobile-menu-footer-item"
           onClick={close}
         >

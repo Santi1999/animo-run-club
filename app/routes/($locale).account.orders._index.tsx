@@ -6,6 +6,7 @@ import {
 } from 'react-router';
 import type {Route} from './+types/account.orders._index';
 import {useRef} from 'react';
+import {useLocalePrefix} from '~/lib/i18n';
 import {
   Money,
   getPaginationVariables,
@@ -93,6 +94,7 @@ function OrdersTable({
 }
 
 function EmptyOrders({hasFilters = false}: {hasFilters?: boolean}) {
+  const localePrefix = useLocalePrefix();
   return (
     <div>
       {hasFilters ? (
@@ -100,7 +102,7 @@ function EmptyOrders({hasFilters = false}: {hasFilters?: boolean}) {
           <p>No orders found matching your search.</p>
           <br />
           <p>
-            <Link to="/account/orders">Clear filters →</Link>
+            <Link to={`${localePrefix}/account/orders`}>Clear filters →</Link>
           </p>
         </>
       ) : (
@@ -108,7 +110,7 @@ function EmptyOrders({hasFilters = false}: {hasFilters?: boolean}) {
           <p>You haven&apos;t placed any orders yet.</p>
           <br />
           <p>
-            <Link to="/collections">Start Shopping →</Link>
+            <Link to={`${localePrefix}/collections`}>Start Shopping →</Link>
           </p>
         </>
       )}

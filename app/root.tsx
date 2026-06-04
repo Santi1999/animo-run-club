@@ -12,7 +12,6 @@ import {
   useLocation,
 } from 'react-router';
 import {useEffect} from 'react';
-import {useTranslation} from 'react-i18next';
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {HEADER_QUERY} from '~/lib/fragments';
@@ -134,6 +133,8 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 
 /**
  * Reads the locale prefix from the URL and keeps i18next in sync.
+ * The initial language is set before render in entry.client.tsx / entry.server.tsx,
+ * so this effect only runs on client-side SPA navigation.
  */
 function useLocaleSync() {
   const {pathname} = useLocation();
@@ -197,7 +198,6 @@ export default function App() {
 
 export function ErrorBoundary() {
   const error = useRouteError();
-  const {t} = useTranslation();
   let errorMessage = 'Unknown error';
   let errorStatus = 500;
 
@@ -210,7 +210,7 @@ export function ErrorBoundary() {
 
   return (
     <div className="route-error">
-      <h1>{t('error.title')}</h1>
+      <h1>Oops</h1>
       <h2>{errorStatus}</h2>
       {errorMessage && (
         <fieldset>

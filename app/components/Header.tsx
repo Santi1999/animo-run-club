@@ -8,6 +8,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
+import {useLocalePrefix} from '~/lib/i18n';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -26,6 +27,7 @@ export function Header({
 }: HeaderProps) {
   const {shop} = header;
   const {pathname} = useLocation();
+  const localePrefix = useLocalePrefix();
   const isHome = pathname === '/' || /^\/[a-z]{2}-[a-z]{2}\/?$/i.test(pathname);
   const [scrolled, setScrolled] = useState(false);
 
@@ -56,7 +58,7 @@ export function Header({
         <SearchToggle />
       </div>
 
-      <NavLink prefetch="intent" to="/" className="header-brand" end>
+      <NavLink prefetch="intent" to={`${localePrefix}/`} className="header-brand" end>
         <svg
           viewBox="0 0 900 206.25"
           style={{height: '48px', width: 'auto'}}
@@ -98,18 +100,20 @@ export function HeaderMenu({
 }) {
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
+  const localePrefix = useLocalePrefix();
 
   return (
     <nav className={className} role="navigation">
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
 
-        const url =
+        const pathname =
           item.url.includes('myshopify.com') ||
           item.url.includes(publicStoreDomain) ||
           item.url.includes(primaryDomainUrl)
             ? new URL(item.url).pathname
             : item.url;
+        const url = pathname.startsWith('/') ? `${localePrefix}${pathname}` : pathname;
         return (
           <NavLink
             className="header-menu-item"
@@ -181,8 +185,9 @@ function SearchToggle() {
 }
 
 function AccountLink({isLoggedIn}: Pick<HeaderProps, 'isLoggedIn'>) {
+  const localePrefix = useLocalePrefix();
   return (
-    <NavLink prefetch="intent" to="/account" className="header-icon-btn">
+    <NavLink prefetch="intent" to={`${localePrefix}/account`} className="header-icon-btn">
       <Suspense
         fallback={
           <svg

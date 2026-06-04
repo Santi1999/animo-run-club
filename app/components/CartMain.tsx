@@ -2,6 +2,7 @@ import {useOptimisticCart} from '@shopify/hydrogen';
 import {Link} from 'react-router';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
+import {useLocalePrefix} from '~/lib/i18n';
 import {CartLineItem, type CartLine} from '~/components/CartLineItem';
 import {CartSummary} from './CartSummary';
 
@@ -93,6 +94,7 @@ function CartEmpty({
   layout?: CartMainProps['layout'];
 }) {
   const {close} = useAside();
+  const localePrefix = useLocalePrefix();
   return (
     <div hidden={hidden}>
       <br />
@@ -101,7 +103,7 @@ function CartEmpty({
         started!
       </p>
       <br />
-      <Link to="/collections" onClick={close} prefetch="viewport">
+      <Link to={`${localePrefix}/collections`} onClick={close} prefetch="viewport">
         Continue shopping →
       </Link>
     </div>

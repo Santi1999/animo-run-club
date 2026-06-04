@@ -2,6 +2,7 @@ import {ChevronDown} from 'lucide-react';
 import {useState} from 'react';
 import {Link, useFetcher, useLocation} from 'react-router';
 import {Trans, useTranslation} from 'react-i18next';
+import {useLocalePrefix} from '~/lib/i18n';
 
 export function Footer({
   onOpenCookieSettings,
@@ -9,6 +10,7 @@ export function Footer({
   onOpenCookieSettings?: () => void;
 }) {
   const {t} = useTranslation();
+  const localePrefix = useLocalePrefix();
   const [openSection, setOpenSection] = useState<string | null>(null);
   const newsletter = useFetcher<{success?: boolean; error?: string}>();
   const newsletterSuccess = newsletter.data?.success;
@@ -78,7 +80,7 @@ export function Footer({
               <Trans
                 i18nKey="footer.newsletter_disclaimer"
                 components={{
-                  privacyLink: <Link to="/privacy-policy" className="underline" />,
+                  privacyLink: <Link to={`${localePrefix}/privacy-policy`} className="underline" />,
                 }}
               />
             </p>
@@ -198,7 +200,7 @@ export function Footer({
               >
                 <li>
                   <Link
-                    to="/contact-us"
+                    to={`${localePrefix}/contact-us`}
                     className="hover:opacity-70 transition-opacity"
                   >
                     {t('footer.write_whatsapp')}
@@ -206,7 +208,7 @@ export function Footer({
                 </li>
                 <li>
                   <Link
-                    to="/contact-us"
+                    to={`${localePrefix}/contact-us`}
                     className="hover:opacity-70 transition-opacity"
                   >
                     {t('footer.contact_link')}
@@ -293,7 +295,7 @@ export function Footer({
               </li> */}
                 <li>
                   <Link
-                    to="/pages/about"
+                    to={`${localePrefix}/pages/about`}
                     className="hover:opacity-70 transition-opacity"
                   >
                     {t('footer.about_us')}
@@ -301,7 +303,7 @@ export function Footer({
                 </li>
                 <li>
                   <Link
-                    to="/contact-us"
+                    to={`${localePrefix}/contact-us`}
                     className="hover:opacity-70 transition-opacity"
                   >
                     {t('footer.work_with_us')}
@@ -328,7 +330,7 @@ export function Footer({
               >
                 <li>
                   <Link
-                    to="/privacy-policy"
+                    to={`${localePrefix}/privacy-policy`}
                     className="hover:opacity-70 transition-opacity"
                   >
                     {t('footer.privacy_statement')}
@@ -336,7 +338,7 @@ export function Footer({
                 </li>
                 <li>
                   <Link
-                    to="/cookie-policy"
+                    to={`${localePrefix}/cookie-policy`}
                     className="hover:opacity-70 transition-opacity"
                   >
                     {t('footer.cookie_policy')}
@@ -352,7 +354,7 @@ export function Footer({
                   </button>
                 </li>
                 <li>
-                  <Link to="/" className="hover:opacity-70 transition-opacity">
+                  <Link to={`${localePrefix}/`} className="hover:opacity-70 transition-opacity">
                     {t('footer.terms_of_sale')}
                   </Link>
                 </li>
@@ -405,7 +407,7 @@ export function Footer({
 
           <div className="text-center mt-4 text-xs text-gray-600">
             <Link
-              to="/contact-us"
+              to={`${localePrefix}/contact-us`}
               className="hover:opacity-70 transition-opacity underline"
             >
               {t('footer.ccpa')}
