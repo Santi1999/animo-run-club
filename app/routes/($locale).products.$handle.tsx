@@ -14,12 +14,25 @@ import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: Route.MetaFunction = ({data}) => {
+  const product = data?.product;
+  const title = `Ánimo | ${product?.title ?? ''}`;
+  const description = product?.description ?? 'Shop Ánimo Run Club';
+  const image = product?.selectedOrFirstAvailableVariant?.image?.url ?? 'https://cdn.shopify.com/s/files/1/0670/7930/7470/files/2.png?v=1780311878';
   return [
-    {title: `Hydrogen | ${data?.product.title ?? ''}`},
+    {title},
     {
       rel: 'canonical',
-      href: `/products/${data?.product.handle}`,
+      href: `/products/${product?.handle}`,
     },
+    {name: 'description', content: description},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+    {property: 'og:image', content: image},
+    {property: 'og:type', content: 'product'},
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: title},
+    {name: 'twitter:description', content: description},
+    {name: 'twitter:image', content: image},
   ];
 };
 

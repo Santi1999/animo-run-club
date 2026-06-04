@@ -1,6 +1,6 @@
 import {Await, useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/_index';
-import {Suspense} from 'react';
+import {Suspense, useState} from 'react';
 import {Image} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
@@ -8,9 +8,24 @@ import type {
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
+import {
+  DropAnnouncementPopup,
+  getDropPopupState,
+} from '~/components/DropAnnouncementPopup';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [
+    {title: 'Ánimo | Home'},
+    {name: 'description', content: 'Built on community, spirit, and movement — performance apparel for every runner.'},
+    {property: 'og:title', content: 'Ánimo | Performance Apparel'},
+    {property: 'og:description', content: 'Built on community, spirit, and movement — performance apparel for every runner.'},
+    {property: 'og:image', content: 'https://cdn.shopify.com/s/files/1/0670/7930/7470/files/2.png?v=1780311878'},
+    {property: 'og:type', content: 'website'},
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: 'Ánimo | Performance Apparel'},
+    {name: 'twitter:description', content: 'Built on community, spirit, and movement — performance apparel for every runner.'},
+    {name: 'twitter:image', content: 'https://cdn.shopify.com/s/files/1/0670/7930/7470/files/2.png?v=1780311878'},
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -20,7 +35,9 @@ export async function loader(args: Route.LoaderArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  const popupState = getDropPopupState(args.request);
+
+  return {...deferredData, ...criticalData, ...popupState};
 }
 
 /**
@@ -60,12 +77,38 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
+  const [popupOpen, setPopupOpen] = useState(data.showDropPopup);
+
   return (
     <div className="home">
       {data.isShopLinked ? null : <MockShopNotice />}
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+      <HeroSection />
+      {/* <FeaturedCollection collection={data.featuredCollection} /> */}
+      {/* <RecommendedProducts products={data.recommendedProducts} /> */}
+      <DropAnnouncementPopup
+        open={popupOpen}
+        onClose={() => setPopupOpen(false)}
+      />
     </div>
+  );
+}
+
+const VIDEO_ID = '98152a68a970f7a76d6a2579baae14dc';
+
+function HeroSection() {
+  return (
+    <section className="hero" aria-hidden="true">
+      <iframe
+        src={`https://customer-b6g02vkp783khfb7.cloudflarestream.com/${VIDEO_ID}/iframe?autoplay=true&loop=true&muted=true&controls=false`}
+        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+        title="Background video"
+      />
+      {/* Safari ignores pointer-events:none on cross-origin iframes. This
+          transparent overlay sits in front of the iframe so Safari never
+          hits the iframe's browsing context, while scroll events bubble up
+          through the DOM to the body so the page still scrolls normally. */}
+      <div className="hero-overlay" />
+    </section>
   );
 }
 

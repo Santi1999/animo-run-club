@@ -28,10 +28,14 @@ export function Aside({
   children,
   heading,
   type,
+  side = 'right',
+  customHeader,
 }: {
   children?: React.ReactNode;
   type: AsideType;
   heading: React.ReactNode;
+  side?: 'left' | 'right';
+  customHeader?: React.ReactNode;
 }) {
   const {type: activeType, close} = useAside();
   const expanded = type === activeType;
@@ -56,17 +60,24 @@ export function Aside({
   return (
     <div
       aria-modal
-      className={`overlay ${expanded ? 'expanded' : ''}`}
+      className={`overlay${expanded ? ' expanded' : ''}${side === 'left' ? ' overlay--left' : ''}`}
       role="dialog"
-      aria-labelledby={id}
+      aria-labelledby={customHeader !== undefined ? undefined : id}
+      aria-label={customHeader !== undefined ? 'Navigation menu' : undefined}
     >
       <button className="close-outside" onClick={close} />
-      <aside>
+      <aside className={side === 'left' ? 'aside--left' : undefined}>
         <header>
-          <h3 id={id}>{heading}</h3>
-          <button className="close reset" onClick={close} aria-label="Close">
-            &times;
-          </button>
+          {customHeader !== undefined ? (
+            customHeader
+          ) : (
+            <>
+              <h3 id={id}>{heading}</h3>
+              <button className="close reset" onClick={close} aria-label="Close">
+                &times;
+              </button>
+            </>
+          )}
         </header>
         <main>{children}</main>
       </aside>

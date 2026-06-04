@@ -7,6 +7,7 @@ import {
 } from 'react-router';
 import type {Route} from './+types/account';
 import {CUSTOMER_DETAILS_QUERY} from '~/graphql/customer-account/CustomerDetailsQuery';
+import {useLocalePrefix} from '~/lib/i18n';
 
 export function shouldRevalidate() {
   return true;
@@ -69,17 +70,19 @@ function AccountMenu() {
     };
   }
 
+  const localePrefix = useLocalePrefix();
+
   return (
     <nav role="navigation">
-      <NavLink to="/account/orders" style={isActiveStyle}>
+      <NavLink to={`${localePrefix}/account/orders`} style={isActiveStyle}>
         Orders &nbsp;
       </NavLink>
       &nbsp;|&nbsp;
-      <NavLink to="/account/profile" style={isActiveStyle}>
+      <NavLink to={`${localePrefix}/account/profile`} style={isActiveStyle}>
         &nbsp; Profile &nbsp;
       </NavLink>
       &nbsp;|&nbsp;
-      <NavLink to="/account/addresses" style={isActiveStyle}>
+      <NavLink to={`${localePrefix}/account/addresses`} style={isActiveStyle}>
         &nbsp; Addresses &nbsp;
       </NavLink>
       &nbsp;|&nbsp;

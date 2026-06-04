@@ -1,3 +1,23 @@
+/* Strip browser/Preflight chrome from the drop-popup email input */
+.drop-popup-email-input,
+.drop-popup-email-input:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Hide scrollbar while keeping scroll functionality */
+html {
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
 :root {
   --aside-width: 400px;
   --cart-aside-summary-height-with-discount: 300px;
@@ -165,7 +185,7 @@ aside li {
   transition: opacity 400ms ease-in-out;
   transition: opacity 400ms;
   visibility: hidden;
-  z-index: 10;
+  z-index: 200;
 }
 
 .overlay .close-outside {
@@ -195,9 +215,82 @@ aside li {
   pointer-events: auto;
   visibility: visible;
 }
-/* reveal aside */
+/* reveal aside (right) */
 .overlay.expanded aside {
   transform: translateX(calc(var(--aside-width) * -1));
+}
+
+/* left-side aside */
+aside.aside--left {
+  right: auto;
+  left: calc(-1 * var(--aside-width));
+}
+
+.overlay--left.expanded aside.aside--left {
+  transform: translateX(var(--aside-width));
+}
+
+.overlay--left .close-outside {
+  left: auto;
+  right: 0;
+  width: calc(100% - var(--aside-width));
+}
+
+/* mobile menu custom header */
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* mobile menu layout — flex column so footer pins to bottom */
+aside.aside--left main {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--header-height));
+  margin: 0;
+  overflow: hidden;
+}
+
+aside.aside--left .header-menu-mobile {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  gap: 0;
+}
+
+aside.aside--left .header-menu-item {
+  display: block;
+  padding: 0.875rem 1.25rem;
+  font-size: 0.9375rem;
+}
+
+/* mobile menu footer links */
+.mobile-menu-footer {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.mobile-menu-footer-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9375rem;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  text-align: left;
+  letter-spacing: 0.02em;
+}
+
+.mobile-menu-footer-lang {
+  color: #666;
 }
 
 button.reset {
@@ -227,19 +320,100 @@ button.reset:hover:not(:has(> *)) {
 */
 .header {
   align-items: center;
-  background: #fff;
+  background: transparent;
+  color: #fff;
   display: flex;
   height: var(--header-height);
-  padding: 0 1rem;
-  position: sticky;
+  padding: 0 1.25rem;
+  position: fixed;
   top: 0;
-  z-index: 1;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition: background 300ms ease, color 300ms ease, box-shadow 300ms ease;
 }
 
-.header-menu-mobile-toggle {
-  @media (min-width: 48em) {
-    display: none;
-  }
+.header--scrolled {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex: 1;
+}
+
+.header-right {
+  justify-content: flex-end;
+}
+
+.header-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  line-height: 1.1;
+  flex-shrink: 0;
+}
+
+.header-brand-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.header-brand-tagline {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.header-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.header-cart-btn {
+  position: relative;
+}
+
+.header-cart-count {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background: currentColor;
+  color: var(--color-light);
+  font-size: 0.6rem;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
+
+.header--scrolled .header-cart-count {
+  color: var(--color-dark);
 }
 
 .header-menu-mobile {
@@ -248,29 +422,10 @@ button.reset:hover:not(:has(> *)) {
   grid-gap: 1rem;
 }
 
-.header-menu-desktop {
-  display: none;
-  grid-gap: 1rem;
-  @media (min-width: 45em) {
-    display: flex;
-    grid-gap: 1rem;
-    margin-left: 3rem;
-  }
-}
-
 .header-menu-item {
   cursor: pointer;
-}
-
-.header-ctas {
-  align-items: center;
-  display: flex;
-  grid-gap: 1rem;
-  margin-left: auto;
-}
-
-.header-ctas > * {
-  min-width: fit-content;
+  color: inherit;
+  text-decoration: none;
 }
 
 /*
@@ -363,37 +518,93 @@ button.reset:hover:not(:has(> *)) {
 * components/Search
 * --------------------------------------------------
 */
-.predictive-search {
-  height: calc(100vh - var(--header-height) - 40px);
+.search-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  z-index: 300;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 200ms ease, visibility 200ms ease;
   overflow-y: auto;
 }
 
-.predictive-search-form {
-  background: var(--color-light);
-  position: sticky;
-  top: 0;
+.search-overlay.expanded {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
-.predictive-search-result {
-  margin-bottom: 2rem;
-}
-
-.predictive-search-result h5 {
-  text-transform: uppercase;
-}
-
-.predictive-search-result-item {
-  margin-bottom: 0.5rem;
-}
-
-.predictive-search-result-item a {
-  align-items: center;
+.search-overlay-bar {
   display: flex;
+  align-items: center;
+  padding: 1.125rem 1rem;
 }
 
-.predictive-search-result-item a img {
-  margin-right: 0.75rem;
-  height: 100%;
+.search-overlay-bar .predictive-search-form {
+  flex: 1;
+}
+
+.search-overlay-bar .search-overlay-close {
+  flex-shrink: 0;
+  width: 80px;
+  margin-left: auto;
+}
+
+.search-overlay-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #f2f2f2;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #000;
+  padding: 0.5rem 1rem;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search-overlay-input::-webkit-search-cancel-button,
+.search-overlay-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.search-overlay-close {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #000;
+  flex-shrink: 0;
+}
+
+.search-overlay-body {
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.search-overlay-section-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0 0 1rem 0;
+}
+
+.search-overlay-coming-soon {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
 }
 
 .search-result {
@@ -413,6 +624,52 @@ button.reset:hover:not(:has(> *)) {
 
 /*
 * --------------------------------------------------
+* components/Hero
+* --------------------------------------------------
+*/
+.hero {
+  position: relative;
+  z-index: 1;
+  height: 90vh;
+  padding: 0;
+  margin-top: calc(-1 * var(--header-height));
+  margin-left: -1rem;
+  margin-right: -1rem;
+  width: calc(100% + 2rem);
+  background: #000;
+  overflow: hidden;
+  /* Remove the entire hero section from the pointer-event hit-test tree so
+     clicks and wheel-scroll events pass through to the document and the fixed
+     header buttons above rather than being swallowed by the cross-origin iframe. */
+  pointer-events: none;
+}
+
+.hero iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100vw, calc(90vh * 16 / 9));
+  height: max(90vh, calc(100vw * 9 / 16));
+  border: none;
+  pointer-events: none;
+}
+
+/* Transparent shield that sits in front of the iframe inside the hero's
+   stacking context. pointer-events: auto explicitly overrides the inherited
+   pointer-events: none from .hero so Safari never routes events into the
+   cross-origin iframe browsing context. Scroll events on this div bubble
+   to the body and scroll the page normally. */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: transparent;
+  pointer-events: auto;
+}
+
+/*
+* --------------------------------------------------
 * routes/__index
 * --------------------------------------------------
 */
@@ -424,14 +681,15 @@ button.reset:hover:not(:has(> *)) {
 
 .featured-collection-image {
   aspect-ratio: 1 / 1;
+  overflow: hidden;
   @media (min-width: 45em) {
     aspect-ratio: 16 / 9;
   }
 }
 
 .featured-collection img {
-  height: auto;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 

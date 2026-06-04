@@ -6,6 +6,7 @@ import {
   type HydrogenRouterContextProvider,
 } from '@shopify/hydrogen';
 import type {EntryContext} from 'react-router';
+import i18n, {localeToLanguage} from '~/i18n/config';
 
 export default async function handleRequest(
   request: Request,
@@ -14,11 +15,31 @@ export default async function handleRequest(
   reactRouterContext: EntryContext,
   context: HydrogenRouterContextProvider,
 ) {
+  // Sync i18next language from the request URL before SSR so the rendered
+  // HTML uses the correct translation strings.
+  const url = new URL(request.url);
+  const firstSegment = url.pathname.split('/')[1]?.toUpperCase() ?? '';
+  const lng = /^[A-Z]{2}-[A-Z]{2}$/.test(firstSegment)
+    ? localeToLanguage(firstSegment.split('-')[0])
+    : 'en';
+  if (i18n.language !== lng) {
+    i18n.changeLanguage(lng);
+  }
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     shop: {
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+    scriptSrc: [
+      "'self'",
+      'https://challenges.cloudflare.com',
+      'https://cdn.shopify.com',
+    ],
+    frameSrc: [
+      "'self'",
+      'https://customer-b6g02vkp783khfb7.cloudflarestream.com',
+      'https://challenges.cloudflare.com',
+    ],
   });
 
   const body = await renderToReadableStream(

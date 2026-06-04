@@ -1,14 +1,14 @@
 import type {LoaderFunctionArgs} from 'react-router';
 
-export async function loader({params, context}: LoaderFunctionArgs) {
-  const {language, country} = context.storefront.i18n;
+/** Locale prefixes that the site recognises (lowercase). */
+const VALID_LOCALE_PREFIXES = new Set(['en-us', 'es-us']);
 
+export async function loader({params}: LoaderFunctionArgs) {
   if (
     params.locale &&
-    params.locale.toLowerCase() !== `${language}-${country}`.toLowerCase()
+    !VALID_LOCALE_PREFIXES.has(params.locale.toLowerCase())
   ) {
-    // If the locale URL param is defined, yet we are still at the default locale
-    // then the locale param must be invalid, send to the 404 page
+    // The locale URL segment doesn't match any known locale — 404
     throw new Response(null, {status: 404});
   }
 

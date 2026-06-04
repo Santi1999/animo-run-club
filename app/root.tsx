@@ -9,14 +9,17 @@ import {
   Scripts,
   ScrollRestoration,
   useRouteLoaderData,
+  useLocation,
 } from 'react-router';
+import {useEffect} from 'react';
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
-import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
+import {HEADER_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
-import tailwindCss from './styles/tailwind.css?url';
+import tailwindStyles from '~/styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import i18n, {localeToLanguage} from '~/i18n/config';
 
 export type RootLoader = typeof loader;
 
@@ -123,36 +126,44 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
 function loadDeferredData({context}: Route.LoaderArgs) {
   const {storefront, customerAccount, cart} = context;
 
-  // defer the footer query (below the fold)
-  const footer = storefront
-    .query(FOOTER_QUERY, {
-      cache: storefront.CacheLong(),
-      variables: {
-        footerMenuHandle: 'footer', // Adjust to your footer menu handle
-      },
-    })
-    .catch((error: Error) => {
-      // Log query errors, but don't throw them so the page can still render
-      console.error(error);
-      return null;
-    });
   return {
     cart: cart.get(),
     isLoggedIn: customerAccount.isLoggedIn(),
-    footer,
   };
+}
+
+/**
+ * Reads the locale prefix from the URL and keeps i18next in sync.
+ * The initial language is set before render in entry.client.tsx / entry.server.tsx,
+ * so this effect only runs on client-side SPA navigation.
+ */
+function useLocaleSync() {
+  const {pathname} = useLocation();
+  const firstSegment = pathname.split('/')[1]?.toUpperCase() ?? '';
+  const hasLocalePrefix = /^[A-Z]{2}-[A-Z]{2}$/.test(firstSegment);
+  const language = hasLocalePrefix ? firstSegment.split('-')[0] : 'EN';
+  const lng = localeToLanguage(language);
+
+  useEffect(() => {
+    if (i18n.language !== lng) {
+      i18n.changeLanguage(lng);
+    }
+  }, [lng]);
+
+  return lng;
 }
 
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
+  const lng = useLocaleSync();
 
   return (
-    <html lang="en">
+    <html lang={lng}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={tailwindCss}></link>
         <link rel="stylesheet" href={resetStyles}></link>
+        <link rel="stylesheet" href={tailwindStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
         <Meta />
         <Links />

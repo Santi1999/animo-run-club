@@ -732,6 +732,21 @@ export type CatalogQuery = {
   };
 };
 
+export type CustomerCreateMutationVariables = StorefrontAPI.Exact<{
+  input: StorefrontAPI.CustomerCreateInput;
+}>;
+
+export type CustomerCreateMutation = {
+  customerCreate?: StorefrontAPI.Maybe<{
+    customer?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.Customer, 'id' | 'email'>
+    >;
+    customerUserErrors: Array<
+      Pick<StorefrontAPI.CustomerUserError, 'field' | 'message' | 'code'>
+    >;
+  }>;
+};
+
 export type PageQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
@@ -1334,7 +1349,12 @@ interface GeneratedQueryTypes {
   };
 }
 
-interface GeneratedMutationTypes {}
+interface GeneratedMutationTypes {
+  '#graphql\n  mutation customerCreate($input: CustomerCreateInput!) {\n    customerCreate(input: $input) {\n      customer {\n        id\n        email\n      }\n      customerUserErrors {\n        field\n        message\n        code\n      }\n    }\n  }\n': {
+    return: CustomerCreateMutation;
+    variables: CustomerCreateMutationVariables;
+  };
+}
 
 declare module '@shopify/hydrogen' {
   interface StorefrontQueries extends GeneratedQueryTypes {}
