@@ -80,7 +80,12 @@ export function Footer({
               <Trans
                 i18nKey="footer.newsletter_disclaimer"
                 components={{
-                  privacyLink: <Link to={`${localePrefix}/privacy-policy`} className="underline" />,
+                  privacyLink: (
+                    <Link
+                      to={`${localePrefix}/privacy-policy`}
+                      className="underline"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -109,7 +114,7 @@ export function Footer({
               {/* </Link> */}
               {/* Instagram */}
               <Link
-                to="/"
+                to="https://www.instagram.com/animorunclub"
                 aria-label="Instagram"
                 className="hover:opacity-70 transition-opacity"
               >
@@ -165,7 +170,7 @@ export function Footer({
               </Link> */}
               {/* TikTok */}
               <Link
-                to="/"
+                to="https://www.tiktok.com/@animo.run.club"
                 aria-label="TikTok"
                 className="hover:opacity-70 transition-opacity"
               >
@@ -270,7 +275,9 @@ export function Footer({
                 onClick={() => toggleSection('company')}
                 className="md:cursor-default flex items-center justify-between w-full md:pointer-events-none mb-4"
               >
-                <h3 className="text-xs font-semibold tracking-wide">{t('footer.company')}</h3>
+                <h3 className="text-xs font-semibold tracking-wide">
+                  {t('footer.company')}
+                </h3>
                 <ChevronDown
                   className={`w-4 h-4 md:hidden transition-transform ${openSection === 'company' ? 'rotate-180' : ''}`}
                 />
@@ -354,7 +361,10 @@ export function Footer({
                   </button>
                 </li>
                 <li>
-                  <Link to={`${localePrefix}/`} className="hover:opacity-70 transition-opacity">
+                  <Link
+                    to={`${localePrefix}/`}
+                    className="hover:opacity-70 transition-opacity"
+                  >
                     {t('footer.terms_of_sale')}
                   </Link>
                 </li>

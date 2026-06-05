@@ -1,381 +1,214 @@
 import {Link} from 'react-router';
+import {useTranslation} from 'react-i18next';
 import type {Route} from './+types/privacy-policy._index';
 import {useLocalePrefix} from '~/lib/i18n';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Privacy Policy | Ánimo Run Club'}];
+  const {t} = useTranslation();
+  return [{title: t('privacy_policy.page_title')}];
 };
 
 export default function PrivacyPolicyPage() {
   const localePrefix = useLocalePrefix();
+  const {t} = useTranslation();
+
   return (
     <div className="px-8 sm:px-12 lg:px-16 py-12 max-w-3xl">
-      <h1 className="text-2xl font-bold mb-2 tracking-wide">PRIVACY POLICY</h1>
+      <h1 className="text-2xl font-bold mb-2 tracking-wide">
+        {t('privacy_policy.heading')}
+      </h1>
       <p className="text-xs text-gray-500 mb-10">
-        Last updated: January 1, 2025
+        {t('privacy_policy.last_updated')}
       </p>
 
-      <Section title="1. INTRODUCTION">
-        <p>
-          Ánimo Run Club (&quot;Ánimo&quot;, &quot;we&quot;, &quot;us&quot;, or
-          &quot;our&quot;) is committed to protecting your personal information
-          and your right to privacy. This Privacy Policy explains how we
-          collect, use, disclose, and safeguard your information when you visit
-          our website, purchase our products, or interact with us in any other
-          way.
-        </p>
-        <p>
-          Please read this policy carefully. If you disagree with its terms,
-          please discontinue use of our site.
-        </p>
+      <Section title={t('privacy_policy.section_1_title')}>
+        <p>{t('privacy_policy.section_1_p1')}</p>
+        <p>{t('privacy_policy.section_1_p2')}</p>
       </Section>
 
-      <Section title="2. DATA CONTROLLER">
-        <p>
-          The data controller responsible for your personal information is Ánimo
-          Run Club. You can reach us at:
-        </p>
+      <Section title={t('privacy_policy.section_2_title')}>
+        <p>{t('privacy_policy.section_2_p1')}</p>
         <ul className="list-none mt-3 space-y-1">
           <li>
-            <strong>Email:</strong>{' '}
+            <strong>{t('privacy_policy.section_2_email')}</strong>{' '}
             <a href="mailto:info@animorunclub.com" className="underline">
-              info@animorunclub.com
+              {t('privacy_policy.section_2_email_address')}
             </a>
           </li>
           <li>
-            <strong>Contact page:</strong>{' '}
+            <strong>{t('privacy_policy.section_2_contact')}</strong>{' '}
             <Link to={`${localePrefix}/contact-us`} className="underline">
-              animorunclub.com/contact-us
+              {t('privacy_policy.section_2_contact_url')}
             </Link>
           </li>
         </ul>
       </Section>
 
-      <Section title="3. INFORMATION WE COLLECT">
-        <p>We may collect the following categories of personal information:</p>
-        <SubSection title="Information you provide directly">
+      <Section title={t('privacy_policy.section_3_title')}>
+        <p>{t('privacy_policy.section_3_p1')}</p>
+        <SubSection title={t('privacy_policy.section_3_subsection_1')}>
           <ul className="list-disc list-inside space-y-1">
-            <li>Name, email address, phone number, and postal address</li>
-            <li>Account credentials (username and password)</li>
-            <li>
-              Billing and payment information (processed securely by our payment
-              providers)
-            </li>
-            <li>Order history and purchase records</li>
-            <li>Communications you send us, including support requests</li>
-            <li>Newsletter and marketing preferences</li>
+            <li>{t('privacy_policy.section_3_list_1_1')}</li>
+            <li>{t('privacy_policy.section_3_list_1_2')}</li>
+            <li>{t('privacy_policy.section_3_list_1_3')}</li>
+            <li>{t('privacy_policy.section_3_list_1_4')}</li>
+            <li>{t('privacy_policy.section_3_list_1_5')}</li>
+            <li>{t('privacy_policy.section_3_list_1_6')}</li>
           </ul>
         </SubSection>
-        <SubSection title="Information collected automatically">
+        <SubSection title={t('privacy_policy.section_3_subsection_2')}>
           <ul className="list-disc list-inside space-y-1">
-            <li>IP address, browser type, and operating system</li>
-            <li>Pages visited, time spent on pages, and referring URLs</li>
-            <li>Device identifiers and cookie data</li>
-            <li>Geolocation data (country/region level)</li>
+            <li>{t('privacy_policy.section_3_list_2_1')}</li>
+            <li>{t('privacy_policy.section_3_list_2_2')}</li>
+            <li>{t('privacy_policy.section_3_list_2_3')}</li>
+            <li>{t('privacy_policy.section_3_list_2_4')}</li>
           </ul>
         </SubSection>
-        <SubSection title="Information from third parties">
+        <SubSection title={t('privacy_policy.section_3_subsection_3')}>
           <ul className="list-disc list-inside space-y-1">
-            <li>
-              Social media platforms when you connect your account or interact
-              with our pages
-            </li>
-            <li>Analytics and advertising partners</li>
-            <li>Fraud prevention and identity verification services</li>
+            <li>{t('privacy_policy.section_3_list_3_1')}</li>
+            <li>{t('privacy_policy.section_3_list_3_2')}</li>
+            <li>{t('privacy_policy.section_3_list_3_3')}</li>
           </ul>
         </SubSection>
       </Section>
 
-      <Section title="4. HOW WE USE YOUR INFORMATION">
-        <p>We use the information we collect for the following purposes:</p>
+      <Section title={t('privacy_policy.section_4_title')}>
+        <p>{t('privacy_policy.section_4_p1')}</p>
         <ul className="list-disc list-inside space-y-1 mt-3">
-          <li>Processing and fulfilling your orders</li>
-          <li>Managing your account and providing customer support</li>
-          <li>
-            Sending order confirmations, shipping updates, and service
-            notifications
-          </li>
-          <li>
-            Sending marketing communications and newsletters, where you have
-            given consent or where permitted by law
-          </li>
-          <li>Personalizing your browsing and shopping experience</li>
-          <li>Improving our website, products, and services</li>
-          <li>Detecting and preventing fraud or unauthorized activity</li>
-          <li>Complying with legal obligations</li>
+          <li>{t('privacy_policy.section_4_list_1')}</li>
+          <li>{t('privacy_policy.section_4_list_2')}</li>
+          <li>{t('privacy_policy.section_4_list_3')}</li>
+          <li>{t('privacy_policy.section_4_list_4')}</li>
+          <li>{t('privacy_policy.section_4_list_5')}</li>
+          <li>{t('privacy_policy.section_4_list_6')}</li>
+          <li>{t('privacy_policy.section_4_list_7')}</li>
+          <li>{t('privacy_policy.section_4_list_8')}</li>
         </ul>
       </Section>
 
-      <Section title="5. LEGAL BASIS FOR PROCESSING">
-        <p>
-          Where applicable under data protection law (including the GDPR), we
-          process your personal information on the following legal bases:
-        </p>
+      <Section title={t('privacy_policy.section_5_title')}>
+        <p>{t('privacy_policy.section_5_p1')}</p>
         <ul className="list-disc list-inside space-y-1 mt-3">
-          <li>
-            <strong>Contract performance</strong> — to fulfill orders and manage
-            your account
-          </li>
-          <li>
-            <strong>Legitimate interests</strong> — to improve our services,
-            prevent fraud, and communicate with existing customers
-          </li>
-          <li>
-            <strong>Consent</strong> — for marketing communications and
-            non-essential cookies
-          </li>
-          <li>
-            <strong>Legal obligation</strong> — where required by applicable law
-          </li>
+          <li>{t('privacy_policy.section_5_list_1')}</li>
+          <li>{t('privacy_policy.section_5_list_2')}</li>
+          <li>{t('privacy_policy.section_5_list_3')}</li>
+          <li>{t('privacy_policy.section_5_list_4')}</li>
         </ul>
       </Section>
 
-      <Section title="6. COOKIES AND TRACKING TECHNOLOGIES">
-        <p>
-          We use cookies and similar tracking technologies to enhance your
-          experience on our website. Cookies are small data files stored on your
-          device.
-        </p>
-        <SubSection title="Types of cookies we use">
+      <Section title={t('privacy_policy.section_6_title')}>
+        <p>{t('privacy_policy.section_6_p1')}</p>
+        <SubSection title={t('privacy_policy.section_6_subsection')}>
           <ul className="list-disc list-inside space-y-1">
-            <li>
-              <strong>Strictly necessary cookies</strong> — required for the
-              website to function (e.g., shopping cart, login session)
-            </li>
-            <li>
-              <strong>Analytics cookies</strong> — help us understand how
-              visitors use our site
-            </li>
-            <li>
-              <strong>Marketing cookies</strong> — used to deliver relevant
-              advertising
-            </li>
-            <li>
-              <strong>Preference cookies</strong> — remember your settings and
-              choices
-            </li>
+            <li>{t('privacy_policy.section_6_list_1')}</li>
+            <li>{t('privacy_policy.section_6_list_2')}</li>
+            <li>{t('privacy_policy.section_6_list_3')}</li>
+            <li>{t('privacy_policy.section_6_list_4')}</li>
           </ul>
         </SubSection>
-        <p>
-          You can manage your cookie preferences at any time through our Cookie
-          Settings link in the footer.
-        </p>
+        <p>{t('privacy_policy.section_6_p2')}</p>
       </Section>
 
-      <Section title="7. SHARING YOUR INFORMATION">
-        <p>
-          We do not sell your personal information. We may share it with the
-          following categories of third parties:
-        </p>
+      <Section title={t('privacy_policy.section_7_title')}>
+        <p>{t('privacy_policy.section_7_p1')}</p>
         <ul className="list-disc list-inside space-y-1 mt-3">
-          <li>
-            <strong>Service providers</strong> — shipping carriers, payment
-            processors, email platforms, and IT infrastructure providers who
-            process data on our behalf
-          </li>
-          <li>
-            <strong>Analytics partners</strong> — to help us analyze website
-            usage and improve our services
-          </li>
-          <li>
-            <strong>Advertising networks</strong> — to show you relevant ads,
-            where you have consented
-          </li>
-          <li>
-            <strong>Legal authorities</strong> — when required by law or to
-            protect our legal rights
-          </li>
-          <li>
-            <strong>Business transfers</strong> — in connection with a merger,
-            acquisition, or sale of assets, where your data may be transferred
-            as a business asset
-          </li>
+          <li>{t('privacy_policy.section_7_list_1')}</li>
+          <li>{t('privacy_policy.section_7_list_2')}</li>
+          <li>{t('privacy_policy.section_7_list_3')}</li>
+          <li>{t('privacy_policy.section_7_list_4')}</li>
+          <li>{t('privacy_policy.section_7_list_5')}</li>
+        </ul>
+        <p className="mt-3">{t('privacy_policy.section_7_p2')}</p>
+      </Section>
+
+      <Section title={t('privacy_policy.section_8_title')}>
+        <p>{t('privacy_policy.section_8_p1')}</p>
+      </Section>
+
+      <Section title={t('privacy_policy.section_9_title')}>
+        <p>{t('privacy_policy.section_9_p1')}</p>
+        <ul className="list-disc list-inside space-y-1 mt-3">
+          <li>{t('privacy_policy.section_9_list_1')}</li>
+          <li>{t('privacy_policy.section_9_list_2')}</li>
+          <li>{t('privacy_policy.section_9_list_3')}</li>
+          <li>{t('privacy_policy.section_9_list_4')}</li>
+        </ul>
+      </Section>
+
+      <Section title={t('privacy_policy.section_10_title')}>
+        <p>{t('privacy_policy.section_10_p1')}</p>
+        <ul className="list-disc list-inside space-y-1 mt-3">
+          <li>{t('privacy_policy.section_10_list_1')}</li>
+          <li>{t('privacy_policy.section_10_list_2')}</li>
+          <li>{t('privacy_policy.section_10_list_3')}</li>
+          <li>{t('privacy_policy.section_10_list_4')}</li>
+          <li>{t('privacy_policy.section_10_list_5')}</li>
+          <li>{t('privacy_policy.section_10_list_6')}</li>
+          <li>{t('privacy_policy.section_10_list_7')}</li>
         </ul>
         <p className="mt-3">
-          All third-party service providers are contractually obligated to
-          handle your data securely and only for the purposes we specify.
-        </p>
-      </Section>
-
-      <Section title="8. INTERNATIONAL DATA TRANSFERS">
-        <p>
-          Your information may be transferred to and processed in countries
-          other than your country of residence. Where required, we put in place
-          appropriate safeguards (such as Standard Contractual Clauses) to
-          ensure your data is protected in accordance with applicable law.
-        </p>
-      </Section>
-
-      <Section title="9. DATA RETENTION">
-        <p>
-          We retain your personal information for as long as necessary to
-          fulfill the purposes outlined in this policy, including for the
-          purposes of satisfying any legal, accounting, or reporting
-          requirements. Specifically:
-        </p>
-        <ul className="list-disc list-inside space-y-1 mt-3">
-          <li>
-            Account information is retained for the life of your account plus up
-            to 5 years
-          </li>
-          <li>
-            Order records are retained for at least 7 years for tax and legal
-            purposes
-          </li>
-          <li>
-            Marketing preferences are retained until you unsubscribe or request
-            deletion
-          </li>
-          <li>
-            Cookie data is retained according to each cookie&apos;s set expiry
-            period
-          </li>
-        </ul>
-      </Section>
-
-      <Section title="10. YOUR RIGHTS">
-        <p>
-          Depending on your location, you may have the following rights
-          regarding your personal information:
-        </p>
-        <ul className="list-disc list-inside space-y-1 mt-3">
-          <li>
-            <strong>Access</strong> — request a copy of the personal data we
-            hold about you
-          </li>
-          <li>
-            <strong>Correction</strong> — request that inaccurate or incomplete
-            data be corrected
-          </li>
-          <li>
-            <strong>Erasure</strong> — request deletion of your personal data
-            (&quot;right to be forgotten&quot;)
-          </li>
-          <li>
-            <strong>Restriction</strong> — request that we restrict how we
-            process your data
-          </li>
-          <li>
-            <strong>Portability</strong> — receive your data in a structured,
-            machine-readable format
-          </li>
-          <li>
-            <strong>Objection</strong> — object to processing based on
-            legitimate interests or for direct marketing
-          </li>
-          <li>
-            <strong>Withdraw consent</strong> — where processing is based on
-            consent, you may withdraw it at any time
-          </li>
-        </ul>
-        <p className="mt-3">
-          To exercise any of these rights, please contact us at{' '}
+          {t('privacy_policy.section_10_p2')}{' '}
           <a href="mailto:info@animorunclub.com" className="underline">
             info@animorunclub.com
           </a>
-          . We will respond within the timeframe required by applicable law.
+          {t('privacy_policy.section_10_p2_end')}
         </p>
       </Section>
 
-      <Section title="11. CALIFORNIA PRIVACY RIGHTS (CCPA/CPRA)">
-        <p>
-          If you are a California resident, you have additional rights under the
-          California Consumer Privacy Act (CCPA) and the California Privacy
-          Rights Act (CPRA):
-        </p>
+      <Section title={t('privacy_policy.section_11_title')}>
+        <p>{t('privacy_policy.section_11_p1')}</p>
         <ul className="list-disc list-inside space-y-1 mt-3">
-          <li>
-            The right to know what personal information we collect, use, and
-            disclose
-          </li>
-          <li>The right to delete your personal information</li>
-          <li>The right to correct inaccurate personal information</li>
-          <li>
-            The right to opt out of the sale or sharing of your personal
-            information for cross-context behavioral advertising
-          </li>
-          <li>
-            The right to non-discrimination for exercising your privacy rights
-          </li>
-          <li>The right to limit use of sensitive personal information</li>
+          <li>{t('privacy_policy.section_11_list_1')}</li>
+          <li>{t('privacy_policy.section_11_list_2')}</li>
+          <li>{t('privacy_policy.section_11_list_3')}</li>
+          <li>{t('privacy_policy.section_11_list_4')}</li>
+          <li>{t('privacy_policy.section_11_list_5')}</li>
+          <li>{t('privacy_policy.section_11_list_6')}</li>
         </ul>
         <p className="mt-3">
-          To submit a CCPA request, contact us at{' '}
+          {t('privacy_policy.section_11_p2')}{' '}
           <a href="mailto:info@animorunclub.com" className="underline">
             info@animorunclub.com
           </a>{' '}
-          or use the &quot;Do Not Sell or Share My Personal Information&quot;
-          link in our website footer.
+          {t('privacy_policy.section_11_p2_middle')}
         </p>
       </Section>
 
-      <Section title="12. SECURITY">
-        <p>
-          We implement appropriate technical and organizational measures to
-          protect your personal information against unauthorized access,
-          alteration, disclosure, or destruction. These include encryption of
-          data in transit (TLS/SSL), access controls, and regular security
-          reviews.
-        </p>
-        <p>
-          While we strive to use commercially acceptable means to protect your
-          data, no method of transmission over the internet or electronic
-          storage is 100% secure. We cannot guarantee absolute security.
-        </p>
+      <Section title={t('privacy_policy.section_12_title')}>
+        <p>{t('privacy_policy.section_12_p1')}</p>
+        <p>{t('privacy_policy.section_12_p2')}</p>
       </Section>
 
-      <Section title="13. CHILDREN'S PRIVACY">
-        <p>
-          Our website and services are not directed to individuals under the age
-          of 16. We do not knowingly collect personal information from children.
-          If you believe we have inadvertently collected information from a
-          minor, please contact us immediately so we can delete it.
-        </p>
+      <Section title={t('privacy_policy.section_13_title')}>
+        <p>{t('privacy_policy.section_13_p1')}</p>
       </Section>
 
-      <Section title="14. THIRD-PARTY LINKS">
-        <p>
-          Our website may contain links to third-party websites. We are not
-          responsible for the privacy practices of those sites and encourage you
-          to read their privacy policies before providing any personal
-          information.
-        </p>
+      <Section title={t('privacy_policy.section_14_title')}>
+        <p>{t('privacy_policy.section_14_p1')}</p>
       </Section>
 
-      <Section title="15. CHANGES TO THIS POLICY">
-        <p>
-          We may update this Privacy Policy from time to time. When we do, we
-          will revise the &quot;Last updated&quot; date at the top of this page.
-          Where changes are material, we will provide a more prominent notice
-          (such as an email notification or a banner on our website). Your
-          continued use of our services after the changes take effect
-          constitutes acceptance of the updated policy.
-        </p>
+      <Section title={t('privacy_policy.section_15_title')}>
+        <p>{t('privacy_policy.section_15_p1')}</p>
       </Section>
 
-      <Section title="16. CONTACT US">
-        <p>
-          If you have questions, concerns, or requests regarding this Privacy
-          Policy or our data practices, please contact us:
-        </p>
+      <Section title={t('privacy_policy.section_16_title')}>
+        <p>{t('privacy_policy.section_16_p1')}</p>
         <ul className="list-none mt-3 space-y-1">
           <li>
-            <strong>Email:</strong>{' '}
+            <strong>{t('privacy_policy.section_16_email')}</strong>{' '}
             <a href="mailto:info@animorunclub.com" className="underline">
-              info@animorunclub.com
+              {t('privacy_policy.section_16_email_address')}
             </a>
           </li>
           <li>
-            <strong>Contact form:</strong>{' '}
+            <strong>{t('privacy_policy.section_16_contact_form')}</strong>{' '}
             <Link to={`${localePrefix}/contact-us`} className="underline">
-              animorunclub.com/contact-us
+              {t('privacy_policy.section_16_contact_url')}
             </Link>
           </li>
         </ul>
-        <p className="mt-3">
-          If you are located in the European Economic Area, you also have the
-          right to lodge a complaint with your local data protection authority.
-        </p>
+        <p className="mt-3">{t('privacy_policy.section_16_p2')}</p>
       </Section>
     </div>
   );

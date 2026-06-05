@@ -1,5 +1,6 @@
 import {useOptimisticCart} from '@shopify/hydrogen';
 import {Link} from 'react-router';
+import {useTranslation} from 'react-i18next';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {useLocalePrefix} from '~/lib/i18n';
@@ -95,16 +96,14 @@ function CartEmpty({
 }) {
   const {close} = useAside();
   const localePrefix = useLocalePrefix();
+  const {t} = useTranslation();
   return (
     <div hidden={hidden}>
       <br />
-      <p>
-        Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
-        started!
-      </p>
+      <p>{t('cart.empty_message')}</p>
       <br />
       <Link to={`${localePrefix}/collections`} onClick={close} prefetch="viewport">
-        Continue shopping →
+        {t('cart.continue_shopping')} →
       </Link>
     </div>
   );
