@@ -1,4 +1,5 @@
-import {redirect, useLoaderData} from 'react-router';
+import {useLoaderData} from 'react-router';
+import {useTranslation} from 'react-i18next';
 import type {Route} from './+types/products.$handle';
 import {
   getSelectedProductOptions,
@@ -8,9 +9,10 @@ import {
   getAdjacentAndFirstAvailableVariants,
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
-import {ProductPrice} from '~/components/ProductPrice';
-import {ProductImage} from '~/components/ProductImage';
-import {ProductForm} from '~/components/ProductForm';
+import type {ProductAccordionItem} from '~/components/ProductAccordion';
+import {ProductDesktopLayout} from '~/components/ProductDesktopLayout';
+import {ProductMobileLayout} from '~/components/ProductMobileLayout';
+import {getGalleryImages} from '~/lib/product';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -83,14 +85,22 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context, params}: Route.LoaderArgs) {
-  // Put any API calls that is not critical to be available on first page render
-  // For example: product reviews, product recommendations, social feeds.
+  const recommendations = context.storefront
+    .query(PRODUCT_RECOMMENDATIONS_QUERY, {
+      variables: {handle: params.handle!},
+    })
+    .catch((error: Error) => {
+      // Log query errors, but don't throw them so the page can still render
+      console.error(error);
+      return null;
+    });
 
-  return {};
+  return {recommendations};
 }
 
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
+  const {product, recommendations} = useLoaderData<typeof loader>();
+  const {t} = useTranslation();
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -108,31 +118,34 @@ export default function Product() {
     selectedOrFirstAvailableVariant: selectedVariant,
   });
 
-  const {title, descriptionHtml} = product;
+  const accordionItems: ProductAccordionItem[] = [];
+  if (product.materialsCare?.value) {
+    accordionItems.push({
+      id: 'materials',
+      label: t('product.materials_care'),
+      content: <p className="whitespace-pre-line">{product.materialsCare.value}</p>,
+    });
+  }
+  accordionItems.push({
+    id: 'commitment',
+    label: t('product.our_commitment'),
+    content: <p>{t('product.our_commitment_text')}</p>,
+  });
+
+  const layoutProps = {
+    product,
+    selectedVariant,
+    productOptions,
+    images: getGalleryImages(product, selectedVariant.image),
+    accordionItems,
+    recommendations,
+  };
 
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <div className="product-main">
-        <h1>{title}</h1>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
-        />
-        <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
-        </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
-      </div>
+    // Negative margins cancel the `body > main` gutter so the page runs edge to edge
+    <div className="bg-white -mx-4 -mb-4">
+      <ProductMobileLayout {...layoutProps} />
+      <ProductDesktopLayout {...layoutProps} />
       <Analytics.ProductView
         data={{
           products: [
@@ -199,6 +212,25 @@ const PRODUCT_FRAGMENT = `#graphql
     description
     encodedVariantExistence
     encodedVariantAvailability
+    images(first: 20) {
+      nodes {
+        __typename
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
+    collections(first: 1) {
+      nodes {
+        title
+        handle
+      }
+    }
+    materialsCare: metafield(namespace: "custom", key: "materials_care") {
+      value
+    }
     options {
       name
       optionValues {
@@ -242,4 +274,39 @@ const PRODUCT_QUERY = `#graphql
     }
   }
   ${PRODUCT_FRAGMENT}
+` as const;
+
+const RELATED_PRODUCT_FRAGMENT = `#graphql
+  fragment RelatedProduct on Product {
+    id
+    handle
+    title
+    productType
+    featuredImage {
+      id
+      altText
+      url
+      width
+      height
+    }
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+  }
+` as const;
+
+const PRODUCT_RECOMMENDATIONS_QUERY = `#graphql
+  query ProductRecommendations(
+    $country: CountryCode
+    $handle: String!
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    productRecommendations(productHandle: $handle) {
+      ...RelatedProduct
+    }
+  }
+  ${RELATED_PRODUCT_FRAGMENT}
 ` as const;

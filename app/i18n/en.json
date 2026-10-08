@@ -20,6 +20,7 @@
     "built_by": "Built by"
   },
   "header": {
+    "collections": "Collections",
     "open_menu": "Open menu",
     "search": "Search",
     "cart": "Cart ({{count}} items)"
@@ -160,5 +161,22 @@
   },
   "error": {
     "title": "Oops"
+  },
+  "product": {
+    "breadcrumb_home": "Home",
+    "breadcrumb_collections": "Collections",
+    "brand": "[ÁNIMO] Run Club",
+    "select_option": "Select {{option}}",
+    "add_to_bag": "Add to Shopping Bag",
+    "sold_out": "Sold Out",
+    "tax_note": "Tax included. Free shipping on orders over $150.",
+    "shipping_returns": "Shipping & Returns",
+    "materials_care": "Materials & Care",
+    "our_commitment": "Our Commitment",
+    "our_commitment_text": "Produced using sustainable manufacturing practices with reduced water consumption. We partner with running communities in Mexico to preserve traditional design elements while supporting local economies. 2% of every sale supports youth athletic programs promoting health and wellness.",
+    "you_may_also_like": "You May Also Like",
+    "scroll_left": "Scroll left",
+    "scroll_right": "Scroll right",
+    "ref": "Ref. {{sku}}"
   }
 }

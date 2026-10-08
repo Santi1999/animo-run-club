@@ -3,21 +3,27 @@ import {Image} from '@shopify/hydrogen';
 
 export function ProductImage({
   image,
+  loading,
+  sizes = '(min-width: 64em) 50vw, 100vw',
+  className = '',
 }: {
   image: ProductVariantFragment['image'];
+  loading?: 'eager' | 'lazy';
+  sizes?: string;
+  className?: string;
 }) {
-  if (!image) {
-    return <div className="product-image" />;
-  }
   return (
-    <div className="product-image">
-      <Image
-        alt={image.altText || 'Product Image'}
-        aspectRatio="1/1"
-        data={image}
-        key={image.id}
-        sizes="(min-width: 45em) 50vw, 100vw"
-      />
+    <div className={`w-full aspect-[3/4] bg-neutral-100 ${className}`}>
+      {image && (
+        <Image
+          alt={image.altText || 'Product Image'}
+          className="w-full h-full object-cover rounded-none!"
+          data={image}
+          key={image.id}
+          loading={loading}
+          sizes={sizes}
+        />
+      )}
     </div>
   );
 }

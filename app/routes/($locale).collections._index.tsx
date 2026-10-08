@@ -3,6 +3,7 @@ import type {Route} from './+types/collections._index';
 import {getPaginationVariables, Image} from '@shopify/hydrogen';
 import type {CollectionFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {useLocalePrefix} from '~/lib/i18n';
 
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -71,11 +72,12 @@ function CollectionItem({
   collection: CollectionFragment;
   index: number;
 }) {
+  const localePrefix = useLocalePrefix();
   return (
     <Link
       className="collection-item"
       key={collection.id}
-      to={`/collections/${collection.handle}`}
+      to={`${localePrefix}/collections/${collection.handle}`}
       prefetch="intent"
     >
       {collection?.image && (

@@ -84,7 +84,7 @@ export default function Homepage() {
       {data.isShopLinked ? null : <MockShopNotice />}
       <HeroSection />
       {/* <FeaturedCollection collection={data.featuredCollection} /> */}
-      {/* <RecommendedProducts products={data.recommendedProducts} /> */}
+      <RecommendedProducts products={data.recommendedProducts} />
       <DropAnnouncementPopup
         open={popupOpen}
         onClose={() => setPopupOpen(false)}
@@ -211,7 +211,7 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 6, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...RecommendedProduct
       }

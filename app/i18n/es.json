@@ -20,6 +20,7 @@
     "built_by": "Creado por"
   },
   "header": {
+    "collections": "Colecciones",
     "open_menu": "Abrir menú",
     "search": "Buscar",
     "cart": "Carrito ({{count}} artículos)"
@@ -160,5 +161,22 @@
   },
   "error": {
     "title": "Ups"
+  },
+  "product": {
+    "breadcrumb_home": "Inicio",
+    "breadcrumb_collections": "Colecciones",
+    "brand": "[ÁNIMO] Run Club",
+    "select_option": "Selecciona {{option}}",
+    "add_to_bag": "Añadir a la bolsa",
+    "sold_out": "Agotado",
+    "tax_note": "Impuestos incluidos. Envío gratis en pedidos superiores a $150.",
+    "shipping_returns": "Envíos y devoluciones",
+    "materials_care": "Materiales y cuidado",
+    "our_commitment": "Nuestro compromiso",
+    "our_commitment_text": "Producido con prácticas de manufactura sostenibles y menor consumo de agua. Colaboramos con comunidades de corredores en México para preservar elementos de diseño tradicionales mientras apoyamos a las economías locales. El 2% de cada venta apoya programas deportivos juveniles que promueven la salud y el bienestar.",
+    "you_may_also_like": "También te puede gustar",
+    "scroll_left": "Desplazar a la izquierda",
+    "scroll_right": "Desplazar a la derecha",
+    "ref": "Ref. {{sku}}"
   }
 }
