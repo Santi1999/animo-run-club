@@ -47,7 +47,9 @@ export function CartMain({layout, cart: originalCart}: CartMainProps) {
     cart &&
     Boolean(cart?.discountCodes?.filter((code) => code.applicable)?.length);
   const className = `cart-main ${withDiscount ? 'with-discount' : ''} ${layout === 'aside' ? 'cart-main--aside' : ''}`;
-  const cartHasItems = cart?.totalQuantity ? cart.totalQuantity > 0 : false;
+  // Base this on the rendered lines (same source as CartEmpty) so the summary
+  // can never show while the empty-state message is displayed.
+  const cartHasItems = linesCount;
   const childrenMap = getLineItemChildrenMap(cart?.lines?.nodes ?? []);
 
   return (

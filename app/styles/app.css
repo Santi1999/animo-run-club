@@ -358,7 +358,10 @@ button.reset:hover:not(:has(> *)) {
   left: 0;
   right: 0;
   z-index: 100;
-  transition: background 300ms ease, color 300ms ease, box-shadow 300ms ease;
+  transition:
+    background 300ms ease,
+    color 300ms ease,
+    box-shadow 300ms ease;
 }
 
 .header--scrolled {
@@ -427,8 +430,8 @@ button.reset:hover:not(:has(> *)) {
   position: absolute;
   top: -4px;
   right: -6px;
-  background: currentColor;
-  color: var(--color-light);
+  background: var(--color-light);
+  color: var(--color-dark);
   font-size: 0.6rem;
   font-weight: 700;
   min-width: 16px;
@@ -441,7 +444,8 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .header--scrolled .header-cart-count {
-  color: var(--color-dark);
+  background: var(--color-dark);
+  color: var(--color-light);
 }
 
 .header-menu-mobile {
@@ -548,7 +552,67 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .cart-line-quantity {
+  align-items: center;
   display: flex;
+}
+
+/* Quantity − / + buttons: clear, tappable circles */
+.cart-line-quantity button[name='decrease-quantity'],
+.cart-line-quantity button[name='increase-quantity'] {
+  align-items: center;
+  background: #fff;
+  border: 1.5px solid #000;
+  border-radius: 50%;
+  color: #000;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 700;
+  height: 1.5rem;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  width: 1.5rem;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cart-line-quantity button[name='decrease-quantity']:hover:not(:disabled),
+.cart-line-quantity button[name='increase-quantity']:hover:not(:disabled) {
+  background: #000;
+  color: #fff;
+}
+
+.cart-line-quantity button[name='decrease-quantity']:disabled,
+.cart-line-quantity button[name='increase-quantity']:disabled {
+  border-color: #d1d5db;
+  color: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* Remove: small red-outlined pill, fills red on hover */
+.cart-line-quantity .cart-line-remove {
+  background: transparent;
+  border: 1px solid #000;
+  border-radius: 999px;
+  color: #000;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.75rem;
+  text-transform: uppercase;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cart-line-quantity .cart-line-remove:hover:not(:disabled) {
+  background: #000;
+  color: #fff;
+}
+
+.cart-line-quantity .cart-line-remove:disabled {
+  border-color: #d1d5db;
+  color: #d1d5db;
+  cursor: not-allowed;
 }
 
 /* Child line components (warranties, gift wrapping, etc.) */
@@ -565,7 +629,51 @@ button.reset:hover:not(:has(> *)) {
 .cart-subtotal {
   align-items: center;
   display: flex;
+  gap: 1.5rem;
+  justify-content: space-between;
 }
+
+.cart-subtotal dd {
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Tighten spacing between subtotal, discount code and gift card code */
+.cart-summary-aside section,
+.cart-summary-page section {
+  padding: 0.8rem 1rem;
+}
+
+.cart-summary-aside dl,
+.cart-summary-page dl {
+  margin: 0.25rem 0;
+}
+
+.cart-summary-aside section input,
+.cart-summary-page section input {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+/* Apply buttons: black, rounded, grey while pressed */
+.cart-summary-aside section button[type='submit'],
+.cart-summary-page section button[type='submit'] {
+  background: #000;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.2rem 1.5rem;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.cart-summary-aside section button[type='submit']:active,
+.cart-summary-page section button[type='submit']:active,
+.cart-summary-aside section button[type='submit']:disabled,
+.cart-summary-page section button[type='submit']:disabled {
+  background: #9ca3af;
+  border-color: #9ca3af;
+}
+
 /*
 * --------------------------------------------------
 * components/Search
@@ -582,7 +690,9 @@ button.reset:hover:not(:has(> *)) {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 200ms ease, visibility 200ms ease;
+  transition:
+    opacity 200ms ease,
+    visibility 200ms ease;
   overflow-y: auto;
 }
 

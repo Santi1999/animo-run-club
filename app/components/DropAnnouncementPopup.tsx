@@ -97,12 +97,12 @@ export function DropAnnouncementPopup({
         aria-labelledby="drop-popup-heading"
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 w-[90vw] max-w-md overflow-hidden bg-neutral-200 outline-none"
+        className="relative z-10 w-[90vw] max-w-md max-h-[95dvh] overflow-hidden bg-neutral-200 outline-none"
       >
         <img
           src="https://cdn.shopify.com/s/files/1/0670/7930/7470/files/ANIMO_HYDRANGEA_ALCHEMY_SS26_COLLECTION_9.png?v=1780199047"
           alt="Upcoming drop preview"
-          className="aspect-4/3 w-full object-cover -mt-1"
+          className="aspect-video sm:aspect-4/3 w-full object-cover -mt-1"
         />
 
         {/* Content */}
