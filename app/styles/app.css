@@ -9,13 +9,32 @@
   appearance: none;
 }
 
-/* Hide scrollbar while keeping scroll functionality */
-html {
-  scrollbar-width: none; /* Firefox */
+/* Thin, neutral scrollbar for the cart drawer (the page keeps the native one) */
+.cart-main--aside,
+.cart-lines {
+  scrollbar-width: thin; /* Firefox, Chrome 121+ */
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
 
-html::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
+.cart-main--aside::-webkit-scrollbar,
+.cart-lines::-webkit-scrollbar {
+  width: 8px; /* Safari, older Chrome/Edge */
+}
+
+.cart-main--aside::-webkit-scrollbar-track,
+.cart-lines::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cart-main--aside::-webkit-scrollbar-thumb,
+.cart-lines::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.cart-main--aside::-webkit-scrollbar-thumb:hover,
+.cart-lines::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
 }
 
 :root {
@@ -108,17 +127,22 @@ aside {
   background: var(--color-light);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
   height: 100vh;
+  height: 100dvh;
   width: min(var(--aside-width), 100vw);
   position: fixed;
   right: calc(-1 * var(--aside-width));
   top: 0;
   transition: transform 200ms ease-in-out;
+  /* header stays on top, main fills the rest */
+  display: flex;
+  flex-direction: column;
 }
 
 aside header {
   align-items: center;
   border-bottom: 1px solid var(--color-dark);
   display: flex;
+  flex-shrink: 0;
   height: var(--header-height);
   justify-content: space-between;
   padding: 0 20px;
@@ -147,6 +171,10 @@ aside header h2 {
 
 aside main {
   margin: 1rem;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 aside p {
@@ -467,6 +495,33 @@ button.reset:hover:not(:has(> *)) {
   max-height: calc(100vh - var(--cart-aside-summary-height-with-discount));
 }
 
+/* Cart drawer: only the lines scroll, the summary stays pinned below.
+   If the window is too short for both, the whole drawer body scrolls. */
+.cart-main.cart-main--aside {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-main--aside .cart-details {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-main--aside .cart-lines {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.cart-main--aside .cart-lines:has(li) {
+  min-height: 11rem; /* room for at least one line */
+}
+
 .cart-line {
   padding: 0.75rem 0;
 }
@@ -488,10 +543,8 @@ button.reset:hover:not(:has(> *)) {
 .cart-summary-aside {
   background: white;
   border-top: 1px solid var(--color-dark);
-  bottom: 0;
+  flex-shrink: 0;
   padding-top: 0.75rem;
-  position: absolute;
-  width: calc(var(--aside-width) - 40px);
 }
 
 .cart-line-quantity {
