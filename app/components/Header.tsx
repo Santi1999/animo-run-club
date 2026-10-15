@@ -42,7 +42,7 @@ export function Header({
 
   return (
     <header
-      className="header"
+      className={solid ? 'header header--scrolled' : 'header'}
       style={
         solid
           ? {

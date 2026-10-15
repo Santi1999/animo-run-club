@@ -9,13 +9,32 @@
   appearance: none;
 }
 
-/* Hide scrollbar while keeping scroll functionality */
-html {
-  scrollbar-width: none; /* Firefox */
+/* Thin, neutral scrollbar for the cart drawer (the page keeps the native one) */
+.cart-main--aside,
+.cart-lines {
+  scrollbar-width: thin; /* Firefox, Chrome 121+ */
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
 
-html::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
+.cart-main--aside::-webkit-scrollbar,
+.cart-lines::-webkit-scrollbar {
+  width: 8px; /* Safari, older Chrome/Edge */
+}
+
+.cart-main--aside::-webkit-scrollbar-track,
+.cart-lines::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cart-main--aside::-webkit-scrollbar-thumb,
+.cart-lines::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.cart-main--aside::-webkit-scrollbar-thumb:hover,
+.cart-lines::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
 }
 
 :root {
@@ -108,17 +127,22 @@ aside {
   background: var(--color-light);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
   height: 100vh;
+  height: 100dvh;
   width: min(var(--aside-width), 100vw);
   position: fixed;
   right: calc(-1 * var(--aside-width));
   top: 0;
   transition: transform 200ms ease-in-out;
+  /* header stays on top, main fills the rest */
+  display: flex;
+  flex-direction: column;
 }
 
 aside header {
   align-items: center;
   border-bottom: 1px solid var(--color-dark);
   display: flex;
+  flex-shrink: 0;
   height: var(--header-height);
   justify-content: space-between;
   padding: 0 20px;
@@ -147,6 +171,10 @@ aside header h2 {
 
 aside main {
   margin: 1rem;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 aside p {
@@ -330,7 +358,10 @@ button.reset:hover:not(:has(> *)) {
   left: 0;
   right: 0;
   z-index: 100;
-  transition: background 300ms ease, color 300ms ease, box-shadow 300ms ease;
+  transition:
+    background 300ms ease,
+    color 300ms ease,
+    box-shadow 300ms ease;
 }
 
 .header--scrolled {
@@ -399,8 +430,8 @@ button.reset:hover:not(:has(> *)) {
   position: absolute;
   top: -4px;
   right: -6px;
-  background: currentColor;
-  color: var(--color-light);
+  background: var(--color-light);
+  color: var(--color-dark);
   font-size: 0.6rem;
   font-weight: 700;
   min-width: 16px;
@@ -413,7 +444,8 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .header--scrolled .header-cart-count {
-  color: var(--color-dark);
+  background: var(--color-dark);
+  color: var(--color-light);
 }
 
 .header-menu-mobile {
@@ -467,6 +499,33 @@ button.reset:hover:not(:has(> *)) {
   max-height: calc(100vh - var(--cart-aside-summary-height-with-discount));
 }
 
+/* Cart drawer: only the lines scroll, the summary stays pinned below.
+   If the window is too short for both, the whole drawer body scrolls. */
+.cart-main.cart-main--aside {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-main--aside .cart-details {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-main--aside .cart-lines {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.cart-main--aside .cart-lines:has(li) {
+  min-height: 11rem; /* room for at least one line */
+}
+
 .cart-line {
   padding: 0.75rem 0;
 }
@@ -488,14 +547,72 @@ button.reset:hover:not(:has(> *)) {
 .cart-summary-aside {
   background: white;
   border-top: 1px solid var(--color-dark);
-  bottom: 0;
+  flex-shrink: 0;
   padding-top: 0.75rem;
-  position: absolute;
-  width: calc(var(--aside-width) - 40px);
 }
 
 .cart-line-quantity {
+  align-items: center;
   display: flex;
+}
+
+/* Quantity − / + buttons: clear, tappable circles */
+.cart-line-quantity button[name='decrease-quantity'],
+.cart-line-quantity button[name='increase-quantity'] {
+  align-items: center;
+  background: #fff;
+  border: 1.5px solid #000;
+  border-radius: 50%;
+  color: #000;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 700;
+  height: 1.5rem;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  width: 1.5rem;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cart-line-quantity button[name='decrease-quantity']:hover:not(:disabled),
+.cart-line-quantity button[name='increase-quantity']:hover:not(:disabled) {
+  background: #000;
+  color: #fff;
+}
+
+.cart-line-quantity button[name='decrease-quantity']:disabled,
+.cart-line-quantity button[name='increase-quantity']:disabled {
+  border-color: #d1d5db;
+  color: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* Remove: small red-outlined pill, fills red on hover */
+.cart-line-quantity .cart-line-remove {
+  background: transparent;
+  border: 1px solid #000;
+  border-radius: 999px;
+  color: #000;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.75rem;
+  text-transform: uppercase;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cart-line-quantity .cart-line-remove:hover:not(:disabled) {
+  background: #000;
+  color: #fff;
+}
+
+.cart-line-quantity .cart-line-remove:disabled {
+  border-color: #d1d5db;
+  color: #d1d5db;
+  cursor: not-allowed;
 }
 
 /* Child line components (warranties, gift wrapping, etc.) */
@@ -512,7 +629,51 @@ button.reset:hover:not(:has(> *)) {
 .cart-subtotal {
   align-items: center;
   display: flex;
+  gap: 1.5rem;
+  justify-content: space-between;
 }
+
+.cart-subtotal dd {
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Tighten spacing between subtotal, discount code and gift card code */
+.cart-summary-aside section,
+.cart-summary-page section {
+  padding: 0.8rem 1rem;
+}
+
+.cart-summary-aside dl,
+.cart-summary-page dl {
+  margin: 0.25rem 0;
+}
+
+.cart-summary-aside section input,
+.cart-summary-page section input {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+/* Apply buttons: black, rounded, grey while pressed */
+.cart-summary-aside section button[type='submit'],
+.cart-summary-page section button[type='submit'] {
+  background: #000;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.2rem 1.5rem;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.cart-summary-aside section button[type='submit']:active,
+.cart-summary-page section button[type='submit']:active,
+.cart-summary-aside section button[type='submit']:disabled,
+.cart-summary-page section button[type='submit']:disabled {
+  background: #9ca3af;
+  border-color: #9ca3af;
+}
+
 /*
 * --------------------------------------------------
 * components/Search
@@ -529,7 +690,9 @@ button.reset:hover:not(:has(> *)) {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 200ms ease, visibility 200ms ease;
+  transition:
+    opacity 200ms ease,
+    visibility 200ms ease;
   overflow-y: auto;
 }
 
@@ -713,13 +876,93 @@ button.reset:hover:not(:has(> *)) {
 */
 .collections-grid {
   display: grid;
-  grid-gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(var(--grid-item-width), 1fr));
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
   margin-bottom: 2rem;
 }
 
 .collection-item img {
   height: auto;
+}
+
+.collection-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  min-height: 8rem;
+  color: #fff;
+  background: linear-gradient(135deg, #0a0a0a 0%, #2b2b2b 60%, #4a4a4a 100%);
+}
+
+.collection-card-icon {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  z-index: 1;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
+}
+
+.collection-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.collection-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.collection-card-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  width: 60%;
+  margin-left: auto;
+  padding: 1rem;
+  min-height: 8rem;
+  justify-content: center;
+}
+
+.collection-card-content h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.collection-card-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.collection-card-button {
+  margin-top: 0.25rem;
+  padding: 0.4rem 0.9rem;
+  background: #fff;
+  color: #000;
+  border-radius: 0.375rem;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 /*
