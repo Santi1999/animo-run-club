@@ -74,23 +74,45 @@ function CollectionItem({
 }) {
   const localePrefix = useLocalePrefix();
   return (
-    <Link
-      className="collection-item"
-      key={collection.id}
-      to={`${localePrefix}/collections/${collection.handle}`}
-      prefetch="intent"
-    >
+    <div className="collection-item collection-card">
       {collection?.image && (
         <Image
           alt={collection.image.altText || collection.title}
-          aspectRatio="1/1"
+          aspectRatio="2/1"
           data={collection.image}
           loading={index < 3 ? 'eager' : undefined}
           sizes="(min-width: 45em) 400px, 100vw"
         />
       )}
-      <h5>{collection.title}</h5>
-    </Link>
+      <span className="collection-card-icon" aria-hidden="true">
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect x="3" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" />
+          <rect x="14" y="14" width="7" height="7" rx="1" />
+        </svg>
+      </span>
+      <div className="collection-card-content">
+        <h3>{collection.title}</h3>
+        {collection.description && <p>{collection.description}</p>}
+        <Link
+          className="collection-card-button"
+          to={`${localePrefix}/collections/${collection.handle}`}
+          prefetch="intent"
+        >
+          View Collection
+        </Link>
+      </div>
+    </div>
   );
 }
 
@@ -99,6 +121,7 @@ const COLLECTIONS_QUERY = `#graphql
     id
     title
     handle
+    description
     image {
       id
       url

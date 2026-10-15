@@ -416,7 +416,7 @@ export function Footer({
 
           <div className="text-center mt-3">
             <a
-              href="https://www.varsastudio.com"
+              href="https://varsastudio.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[10px] text-black/40 hover:text-black/60 transition-colors"
