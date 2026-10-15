@@ -172,6 +172,16 @@
     "tax_note": "Tax included. Free shipping on orders over $150.",
     "shipping_returns": "Shipping & Returns",
     "materials_care": "Materials & Care",
+    "product_care": "Product Care",
+    "specifications": "Specifications",
+    "spec": {
+      "capacity": "Capacity",
+      "dimensions": "Dimensions",
+      "color-pattern": "Color",
+      "fabric": "Fabric",
+      "headwear-features": "Headwear features",
+      "target-gender": "Target gender"
+    },
     "our_commitment": "Our Commitment",
     "our_commitment_text": "Produced using sustainable manufacturing practices with reduced water consumption. We partner with running communities in Mexico to preserve traditional design elements while supporting local economies. 2% of every sale supports youth athletic programs promoting health and wellness.",
     "you_may_also_like": "You May Also Like",

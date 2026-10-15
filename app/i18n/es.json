@@ -172,6 +172,16 @@
     "tax_note": "Impuestos incluidos. Envío gratis en pedidos superiores a $150.",
     "shipping_returns": "Envíos y devoluciones",
     "materials_care": "Materiales y cuidado",
+    "product_care": "Cuidado del producto",
+    "specifications": "Especificaciones",
+    "spec": {
+      "capacity": "Capacidad",
+      "dimensions": "Dimensiones",
+      "color-pattern": "Color",
+      "fabric": "Tela",
+      "headwear-features": "Características",
+      "target-gender": "Género"
+    },
     "our_commitment": "Nuestro compromiso",
     "our_commitment_text": "Producido con prácticas de manufactura sostenibles y menor consumo de agua. Colaboramos con comunidades de corredores en México para preservar elementos de diseño tradicionales mientras apoyamos a las economías locales. El 2% de cada venta apoya programas deportivos juveniles que promueven la salud y el bienestar.",
     "you_may_also_like": "También te puede gustar",

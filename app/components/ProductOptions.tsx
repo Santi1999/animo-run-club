@@ -31,8 +31,23 @@ export function ProductOptions({
   return (
     <>
       {productOptions.map((option) => {
-        // If there is only a single value in the option values, don't display the option
-        if (option.optionValues.length === 1) return null;
+        // A single value can't be picked: show it as a fixed, selected label.
+        // Shopify's internal "Title / Default Title" option is never shown.
+        if (option.optionValues.length === 1) {
+          const [{name}] = option.optionValues;
+          if (option.name === 'Title' && name === 'Default Title') return null;
+
+          return (
+            <div className="mb-6" key={option.name}>
+              <div className="text-xs tracking-widest uppercase font-medium mb-3">
+                {option.name}
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <div className={itemClassName(true, true)}>{name}</div>
+              </div>
+            </div>
+          );
+        }
 
         return (
           <div className="mb-6" key={option.name}>

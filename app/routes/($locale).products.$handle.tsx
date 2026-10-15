@@ -12,7 +12,11 @@ import {
 import type {ProductAccordionItem} from '~/components/ProductAccordion';
 import {ProductDesktopLayout} from '~/components/ProductDesktopLayout';
 import {ProductMobileLayout} from '~/components/ProductMobileLayout';
-import {getGalleryImages} from '~/lib/product';
+import {
+  CATEGORY_METAFIELD_IDENTIFIERS,
+  getCategorySpecs,
+  getGalleryImages,
+} from '~/lib/product';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -62,7 +66,11 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
 
   const [{product}] = await Promise.all([
     storefront.query(PRODUCT_QUERY, {
-      variables: {handle, selectedOptions: getSelectedProductOptions(request)},
+      variables: {
+        handle,
+        selectedOptions: getSelectedProductOptions(request),
+        categoryMetafields: CATEGORY_METAFIELD_IDENTIFIERS,
+      },
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);
@@ -126,6 +134,45 @@ export default function Product() {
       content: <p className="whitespace-pre-line">{product.materialsCare.value}</p>,
     });
   }
+  if (product.productCare?.value) {
+    accordionItems.push({
+      id: 'care',
+      label: t('product.product_care'),
+      content: <p className="whitespace-pre-line">{product.productCare.value}</p>,
+    });
+  }
+
+  const specs = [
+    ...(['capacity', 'dimensions'] as const).flatMap((key) => {
+      const value = product[key]?.value;
+      return value ? [{key, label: t(`product.spec.${key}`), value}] : [];
+    }),
+    ...getCategorySpecs(
+      product.categoryMetafields,
+      product.options.map((option) => option.name),
+    ).map(({key, name, value}) => ({
+      key,
+      label: t(`product.spec.${key}`, {defaultValue: name}),
+      value,
+    })),
+  ];
+  if (specs.length) {
+    accordionItems.push({
+      id: 'specifications',
+      label: t('product.specifications'),
+      content: (
+        <dl className="space-y-2">
+          {specs.map(({key, label, value}) => (
+            <div key={key} className="flex justify-between gap-4">
+              <dt>{label}</dt>
+              <dd className="text-right text-black">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      ),
+    });
+  }
+
   accordionItems.push({
     id: 'commitment',
     label: t('product.our_commitment'),
@@ -231,6 +278,27 @@ const PRODUCT_FRAGMENT = `#graphql
     materialsCare: metafield(namespace: "custom", key: "materials_care") {
       value
     }
+    productCare: metafield(namespace: "custom", key: "product_care") {
+      value
+    }
+    capacity: metafield(namespace: "custom", key: "capacity") {
+      value
+    }
+    dimensions: metafield(namespace: "custom", key: "dimensions") {
+      value
+    }
+    categoryMetafields: metafields(identifiers: $categoryMetafields) {
+      key
+      references(first: 10) {
+        nodes {
+          ... on Metaobject {
+            label: field(key: "label") {
+              value
+            }
+          }
+        }
+      }
+    }
     options {
       name
       optionValues {
@@ -268,6 +336,7 @@ const PRODUCT_QUERY = `#graphql
     $handle: String!
     $language: LanguageCode
     $selectedOptions: [SelectedOptionInput!]!
+    $categoryMetafields: [HasMetafieldsIdentifier!]!
   ) @inContext(country: $country, language: $language) {
     product(handle: $handle) {
       ...Product

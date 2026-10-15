@@ -988,9 +988,19 @@ button.reset:hover:not(:has(> *)) {
   }
 }
 
+.product-item-image {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
 .product-item img {
-  height: auto;
+  height: 100%;
   width: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 /*
