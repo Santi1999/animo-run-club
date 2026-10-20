@@ -9,8 +9,10 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductRecommendations} from '~/components/ProductRecommendations';
 import type {ProductLayoutProps} from '~/lib/product';
 
-const SIDEBAR =
-  'sticky top-[var(--header-height)] self-start h-[calc(100vh-var(--header-height))] overflow-y-auto scrollbar-hide border-black/10 px-8 pt-10 pb-16';
+const SIDEBAR = 'self-start border-black/10 px-8 pt-10 pb-16';
+// The purchase panel stays in view; the info column scrolls with the page
+const STICKY =
+  'sticky top-[var(--header-height)] h-[calc(100vh-var(--header-height))] overflow-y-auto scrollbar-hide';
 
 /**
  * `lg` and up: info column | stacked images | sticky purchase panel.
@@ -52,12 +54,12 @@ export function ProductDesktopLayout({
             </div>
           )}
           <ProductDescription html={product.descriptionHtml} className="mb-10" />
-          <ProductAccordion items={accordionItems} />
+          <ProductAccordion items={accordionItems} alwaysOpen />
         </div>
 
         <ProductGalleryStack images={images} />
 
-        <div className={`${SIDEBAR} border-l`}>
+        <div className={`${SIDEBAR} ${STICKY} border-l`}>
           <div className="mb-8">
             <ProductPrice
               className="text-2xl font-semibold tracking-tight"

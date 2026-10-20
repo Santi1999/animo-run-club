@@ -7,9 +7,29 @@ export interface ProductAccordionItem {
   content: React.ReactNode;
 }
 
-function AccordionRow({label, content}: Omit<ProductAccordionItem, 'id'>) {
+function AccordionRow({
+  label,
+  content,
+  alwaysOpen,
+}: Omit<ProductAccordionItem, 'id'> & {alwaysOpen?: boolean}) {
   const [open, setOpen] = useState(false);
   const Chevron = open ? ChevronUp : ChevronDown;
+
+  if (alwaysOpen) {
+    // Static section: a heading instead of a toggle button, content always shown
+    return (
+      <div className="border-t border-black/10">
+        <h2 className="flex items-center py-4! m-0! [font-size:inherit]! [font-weight:inherit]! [line-height:inherit]!">
+          <span className="text-xs tracking-widest uppercase font-medium">
+            {label}
+          </span>
+        </h2>
+        <div className="pb-5 text-sm text-black/60 leading-relaxed">
+          {content}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="border-t border-black/10">
@@ -33,14 +53,23 @@ function AccordionRow({label, content}: Omit<ProductAccordionItem, 'id'>) {
   );
 }
 
-/** Collapsible sections (materials, commitment, …) shown on the product page. */
-export function ProductAccordion({items}: {items: ProductAccordionItem[]}) {
+/**
+ * Collapsible sections (materials, commitment, …) shown on the product page.
+ * With `alwaysOpen`, sections are always expanded and have no toggle.
+ */
+export function ProductAccordion({
+  items,
+  alwaysOpen = false,
+}: {
+  items: ProductAccordionItem[];
+  alwaysOpen?: boolean;
+}) {
   if (!items.length) return null;
 
   return (
     <div>
       {items.map(({id, ...item}) => (
-        <AccordionRow key={id} {...item} />
+        <AccordionRow key={id} {...item} alwaysOpen={alwaysOpen} />
       ))}
       <div className="border-t border-black/10" />
     </div>
