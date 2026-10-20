@@ -27,13 +27,13 @@ export function ProductItem({
       to={variantUrl}
     >
       {image && (
-        // Square frame; no `aspectRatio` on Image so the CDN doesn't crop it
+        // 4:5 frame; no `aspectRatio` on Image so the CDN doesn't crop it
         <div className="product-item-image">
           <Image
             alt={image.altText || product.title}
             data={image}
             loading={loading}
-            sizes="(min-width: 45em) 400px, 100vw"
+            sizes="(min-width: 45em) 33vw, 50vw"
           />
         </div>
       )}
