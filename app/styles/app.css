@@ -876,93 +876,129 @@ button.reset:hover:not(:has(> *)) {
 */
 .collections-grid {
   display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  grid-gap: 3rem;
+  grid-template-columns: minmax(0, 1fr);
   margin-bottom: 2rem;
 }
 
-.collection-item img {
-  height: auto;
+.collection-preview-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.collection-card {
-  position: relative;
-  display: block;
+.collection-preview-header h2 {
+  margin: 0;
+}
+
+/* ~1.2 photos visible on mobile, ~3.2 on laptop; the partial one hints at scrolling */
+.collection-preview-track {
+  --gap: 0.5rem;
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* scrolls by touch, trackpad, Shift+wheel, keys or buttons */
+}
+
+.collection-preview-track::-webkit-scrollbar {
+  display: none;
+}
+
+.collection-preview-track:focus-visible {
+  outline: 2px solid var(--color-dark);
+  outline-offset: 2px;
+}
+
+.collection-preview-photo {
+  flex: 0 0 calc((100% - var(--gap)) / 1.2);
+  scroll-snap-align: start;
   overflow: hidden;
-  border-radius: 0.75rem;
-  min-height: 8rem;
-  color: #fff;
-  background: linear-gradient(135deg, #0a0a0a 0%, #2b2b2b 60%, #4a4a4a 100%);
+  border-radius: 4px;
+  @media (min-width: 45em) {
+    flex-basis: calc((100% - 3 * var(--gap)) / 3.2);
+  }
 }
 
-.collection-card-icon {
+.collection-preview-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+@media (hover: hover) {
+  .collection-preview-photo:hover img {
+    opacity: 0.85;
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .collection-preview-photo:hover img {
+    transform: scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-preview-photo img {
+    transition: none;
+  }
+}
+
+/* components/PhotoCarousel: prev/next buttons, only for mouse users */
+.photo-carousel {
+  position: relative;
+}
+
+.photo-carousel-button {
+  display: none;
   position: absolute;
   top: 50%;
-  left: 1rem;
-  z-index: 1;
   transform: translateY(-50%);
-  display: flex;
+  width: 44px;
+  height: 44px;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  border: 0;
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--color-dark);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.photo-carousel-button--prev {
+  left: 0.75rem;
+}
+
+.photo-carousel-button--next {
+  right: 0.75rem;
+}
+
+.photo-carousel-button:hover {
   background: rgba(255, 255, 255, 0.9);
-  color: #000;
 }
 
-.collection-card img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.photo-carousel-button:focus-visible {
+  outline: 2px solid var(--color-dark);
+  outline-offset: 2px;
 }
 
-.collection-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.55) 100%);
+@media (hover: hover) and (pointer: fine) {
+  .photo-carousel-button[data-visible='true'] {
+    display: flex;
+  }
 }
 
-.collection-card-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
-  width: 60%;
-  margin-left: auto;
-  padding: 1rem;
-  min-height: 8rem;
-  justify-content: center;
-}
-
-.collection-card-content h3 {
-  margin: 0;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.collection-card-content p {
-  margin: 0;
-  font-size: 0.85rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.collection-card-button {
-  margin-top: 0.25rem;
-  padding: 0.4rem 0.9rem;
-  background: #fff;
-  color: #000;
-  border-radius: 0.375rem;
-  font-size: 0.85rem;
-  font-weight: 600;
+@media (prefers-reduced-motion: reduce) {
+  .photo-carousel-button {
+    transition: none;
+  }
 }
 
 /*
