@@ -70,8 +70,8 @@ export function Header({
             y="130"
             fill="currentColor"
             fontSize="82"
-            fontFamily="Arial, sans-serif"
-            fontWeight="bold"
+            fontFamily="Aileron, Arial, sans-serif"
+            fontWeight="700"
             textAnchor="middle"
           >
             [ÁNIMO] RUN CLUB
