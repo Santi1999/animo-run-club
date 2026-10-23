@@ -11,9 +11,12 @@ import {CookieBanner} from '~/components/CookieBanner';
 import {CookieModal} from '~/components/CookieModal';
 import {SearchFormPredictive} from '~/components/SearchFormPredictive';
 
+type SearchCollection = {id: string; title: string; handle: string};
+
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
   header: HeaderQuery;
+  collections: SearchCollection[];
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
   children?: React.ReactNode;
@@ -23,6 +26,7 @@ export function PageLayout({
   cart,
   children = null,
   header,
+  collections,
   isLoggedIn,
   publicStoreDomain,
 }: PageLayoutProps) {
@@ -31,7 +35,7 @@ export function PageLayout({
   return (
     <Aside.Provider>
       <CartAside cart={cart} />
-      <SearchAside />
+      <SearchAside collections={collections} />
       <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
       {header && (
         <Header
@@ -70,9 +74,10 @@ function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
   );
 }
 
-function SearchAside() {
+function SearchAside({collections}: {collections: SearchCollection[]}) {
   const {type, close} = useAside();
   const {t} = useTranslation();
+  const localePrefix = useLocalePrefix();
   const isOpen = type === 'search';
 
   return (
@@ -97,19 +102,42 @@ function SearchAside() {
             />
           )}
         </SearchFormPredictive>
-        <button className="search-overlay-close reset" onClick={close}>
-          {t('page_layout.close')}
+        <button
+          className="search-overlay-close reset"
+          onClick={close}
+          aria-label={t('page_layout.close')}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="M4 4l12 12M16 4L4 16" />
+          </svg>
         </button>
       </div>
 
       <div className="search-overlay-body">
         <div className="search-overlay-section">
           <h3 className="search-overlay-section-title">{t('page_layout.collections')}</h3>
-          <p className="search-overlay-coming-soon">{t('page_layout.coming_soon')}</p>
-        </div>
-        <div className="search-overlay-section">
-          <h3 className="search-overlay-section-title">{t('page_layout.highlights')}</h3>
-          <p className="search-overlay-coming-soon">{t('page_layout.coming_soon')}</p>
+          <ul className="search-overlay-list">
+            {collections.map((collection) => (
+              <li key={collection.id}>
+                <NavLink
+                  to={`${localePrefix}/collections/${collection.handle}`}
+                  className="search-overlay-link"
+                  onClick={close}
+                >
+                  {collection.title}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

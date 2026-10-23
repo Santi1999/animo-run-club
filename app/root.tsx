@@ -105,18 +105,34 @@ export async function loader(args: Route.LoaderArgs) {
 async function loadCriticalData({context}: Route.LoaderArgs) {
   const {storefront} = context;
 
-  const [header] = await Promise.all([
+  const [header, {collections}] = await Promise.all([
     storefront.query(HEADER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
         headerMenuHandle: 'main-menu', // Adjust to your header menu handle
       },
     }),
+    storefront.query(SEARCH_COLLECTIONS_QUERY, {
+      cache: storefront.CacheLong(),
+    }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  return {header};
+  return {header, collections: collections.nodes};
 }
+
+const SEARCH_COLLECTIONS_QUERY = `#graphql
+  query SearchOverlayCollections($country: CountryCode, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    collections(first: 10) {
+      nodes {
+        id
+        title
+        handle
+      }
+    }
+  }
+` as const;
 
 /**
  * Load data for rendering content below the fold. This data is deferred and will be
