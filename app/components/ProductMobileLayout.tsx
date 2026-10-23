@@ -9,7 +9,11 @@ import {ProductOptions} from '~/components/ProductOptions';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductRecommendations} from '~/components/ProductRecommendations';
 import type {ProductLayoutProps} from '~/lib/product';
-import {SHEET_PEEK_HEIGHT} from '~/lib/useBottomSheet';
+import {
+  SHEET_EASING,
+  SHEET_PEEK_HEIGHT,
+  SHEET_TRANSITION_MS,
+} from '~/lib/useBottomSheet';
 
 /** Below `lg`: full-bleed gallery with a swipe-up bottom sheet for details. */
 export function ProductMobileLayout({
@@ -52,7 +56,19 @@ export function ProductMobileLayout({
                 price={selectedVariant.price}
                 compareAtPrice={selectedVariant.compareAtPrice}
               />
-              {expanded && <ProductOptions productOptions={productOptions} />}
+              {/* Animated open so the header doesn't jump in height mid-snap */}
+              <div
+                className="grid"
+                style={{
+                  gridTemplateRows: expanded ? '1fr' : '0fr',
+                  opacity: expanded ? 1 : 0,
+                  transition: `grid-template-rows ${SHEET_TRANSITION_MS}ms ${SHEET_EASING}, opacity ${SHEET_TRANSITION_MS}ms ${SHEET_EASING}`,
+                }}
+              >
+                <div className="overflow-hidden">
+                  <ProductOptions productOptions={productOptions} />
+                </div>
+              </div>
               <ProductAddToCart selectedVariant={selectedVariant} />
             </>
           )}

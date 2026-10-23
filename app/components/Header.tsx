@@ -107,6 +107,15 @@ export function HeaderMenu({
     <nav className={className} role="navigation">
       <NavLink
         className="header-menu-item"
+        end
+        onClick={close}
+        prefetch="intent"
+        to={`${localePrefix}/`}
+      >
+        {t('header.home')}
+      </NavLink>
+      <NavLink
+        className="header-menu-item"
         onClick={close}
         prefetch="intent"
         to={`${localePrefix}/collections`}
@@ -130,6 +139,7 @@ export function HeaderMenu({
           item.url.includes(primaryDomainUrl)
             ? new URL(item.url).pathname
             : item.url;
+        if (pathname === '/' || pathname === '') return null;
         const url = pathname.startsWith('/') ? `${localePrefix}${pathname}` : pathname;
         return (
           <NavLink

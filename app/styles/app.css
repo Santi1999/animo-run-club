@@ -938,7 +938,6 @@ button.reset:hover:not(:has(> *)) {
 /* One photo at a time on mobile, ~4.2 smaller photos on desktop so the caption stays in view */
 .collection-preview-track {
   --gap: 1.5rem;
-  /* room so the photo shadows aren't clipped by the scroll container */
   padding: 0.5rem 0.5rem 1.5rem;
   scroll-padding-inline: 0.5rem;
   display: flex;
@@ -964,7 +963,6 @@ button.reset:hover:not(:has(> *)) {
   scroll-snap-stop: always;
   overflow: hidden;
   border-radius: 1.25rem;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
   @media (min-width: 45em) {
     flex-basis: calc((100% - 1rem - 3 * var(--gap)) / 3.8);
     scroll-snap-align: start;

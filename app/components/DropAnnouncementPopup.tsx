@@ -142,10 +142,10 @@ export function DropAnnouncementPopup({
                 <button
                   type="submit"
                   disabled={newsletter.state === 'submitting'}
-                  className={`ml-2 text-xs font-semibold tracking-widest uppercase px-4 py-2 transition-colors disabled:opacity-50 ${
+                  className={`ml-2 shrink-0 whitespace-nowrap border text-xs font-semibold tracking-widest uppercase px-4 py-2 transition-colors disabled:opacity-50 ${
                     emailValid
-                      ? 'bg-black text-white'
-                      : 'bg-transparent text-gray-400'
+                      ? 'bg-black text-white border-black'
+                      : 'bg-transparent text-gray-400 border-gray-300'
                   }`}
                 >
                   Notify Me

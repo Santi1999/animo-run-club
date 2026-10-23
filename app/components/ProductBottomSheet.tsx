@@ -1,4 +1,8 @@
-import {useBottomSheet} from '~/lib/useBottomSheet';
+import {
+  SHEET_EASING,
+  SHEET_TRANSITION_MS,
+  useBottomSheet,
+} from '~/lib/useBottomSheet';
 
 /**
  * Mobile bottom sheet that peeks over its (relatively positioned) parent and
@@ -12,7 +16,8 @@ export function ProductBottomSheet({
   header: (expanded: boolean) => React.ReactNode;
   children: React.ReactNode;
 }) {
-  const {sheetRef, expanded, dragHandlers, sheetTransform} = useBottomSheet();
+  const {sheetRef, handleRef, expanded, mouseHandlers, sheetTransform} =
+    useBottomSheet();
 
   return (
     <div
@@ -22,13 +27,17 @@ export function ProductBottomSheet({
       }`}
       style={{
         transform: sheetTransform,
-        transition: 'transform 0.4s cubic-bezier(0.32,0.72,0,1)',
+        transition: `transform ${SHEET_TRANSITION_MS}ms ${SHEET_EASING}`,
         overflowY: expanded ? 'auto' : 'hidden',
+        willChange: 'transform',
       }}
     >
       <div
-        {...dragHandlers}
-        style={{touchAction: 'none'}}
+        ref={handleRef}
+        {...mouseHandlers}
+        // Collapsed: we own every vertical gesture. Expanded: let the browser
+        // scroll the sheet; the hook only takes over when pulling down at top.
+        style={{touchAction: expanded ? 'pan-y' : 'none'}}
         className="sticky top-0 bg-white z-10 cursor-grab active:cursor-grabbing"
       >
         <div className="flex justify-center pt-3 pb-3">
