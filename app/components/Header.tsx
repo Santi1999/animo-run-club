@@ -113,6 +113,14 @@ export function HeaderMenu({
       >
         {t('header.collections')}
       </NavLink>
+      <NavLink
+        className="header-menu-item"
+        onClick={close}
+        prefetch="intent"
+        to={`${localePrefix}/events`}
+      >
+        {t('header.events')}
+      </NavLink>
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url || /\/collections\/?$/.test(item.url)) return null;
 

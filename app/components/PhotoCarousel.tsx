@@ -18,6 +18,8 @@ export function PhotoCarousel({
   // Hidden until measured on the client, so server and client markup match
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
+  const [dotCount, setDotCount] = useState(0);
+  const [activeDot, setActiveDot] = useState(0);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -26,6 +28,20 @@ export function PhotoCarousel({
     const update = () => {
       setCanPrev(track.scrollLeft > 1);
       setCanNext(track.scrollLeft + track.clientWidth < track.scrollWidth - 1);
+
+      // One dot per reachable snap position: all photos on mobile, fewer on
+      // desktop where several photos are visible at once
+      const photo = track.firstElementChild as HTMLElement | null;
+      if (!photo) return;
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      const step = photo.offsetWidth + gap;
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      setDotCount(maxScroll > 1 ? Math.round(maxScroll / step) + 1 : 1);
+      setActiveDot(
+        maxScroll - track.scrollLeft < 1
+          ? Math.round(maxScroll / step)
+          : Math.round(track.scrollLeft / step),
+      );
     };
 
     update();
@@ -85,6 +101,13 @@ export function PhotoCarousel({
       </div>
       {arrow(-1)}
       {arrow(1)}
+      {dotCount > 1 && (
+        <div className="photo-carousel-dots" aria-hidden="true">
+          {Array.from({length: dotCount}, (_, i) => (
+            <span key={i} data-active={i === activeDot} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

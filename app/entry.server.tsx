@@ -35,6 +35,12 @@ export default async function handleRequest(
       'https://challenges.cloudflare.com',
       'https://cdn.shopify.com',
     ],
+    imgSrc: [
+      "'self'",
+      'data:',
+      'https://cdn.shopify.com',
+      'https://varsa-studio-content.nyc3.cdn.digitaloceanspaces.com',
+    ],
     frameSrc: [
       "'self'",
       'https://customer-b6g02vkp783khfb7.cloudflarestream.com',

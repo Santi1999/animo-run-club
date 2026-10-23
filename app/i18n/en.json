@@ -21,9 +21,55 @@
   },
   "header": {
     "collections": "Collections",
+    "events": "Races",
     "open_menu": "Open menu",
     "search": "Search",
     "cart": "Cart ({{count}} items)"
+  },
+  "events": {
+    "title": "SOCIAL RUNS & WALKS",
+    "intro": "Join us every Sunday for our weekly Social Runs & Walks, where every pace is welcome and community comes first. Discover our upcoming races, group runs, walks, and community activities. Whether you're an experienced runner or just getting started, there's always a place for you at",
+    "club_name": "[ÁNIMO] RUN CLUB.",
+    "cta": "Join Our Next Run",
+    "slogan_line_1": "Every step counts.",
+    "slogan_line_2": "Every story matters.",
+    "slogan_cta": "¡ÁNIMO!",
+    "social_heading": "SOCIAL RUNS & WALKS",
+    "social_badge": "Social Run",
+    "races_heading": "RACES",
+    "races_badge": "Races",
+    "community_heading": "COMMUNITY RUNS",
+    "community_badge": "Community",
+    "special_heading": "SPECIAL EVENTS",
+    "special_badge": "Special",
+    "when": "Every Sunday · 9:30 AM",
+    "event_title": "Sunday Social Run & Walk",
+    "event_text": "Join us for a morning of movement, connection, and community. Choose your pace and enjoy the journey with us.",
+    "meeting_point": "Long Island, New York",
+    "options": "5K Community Run/Walk · All Paces",
+    "location_link": "LOCATION",
+    "register_link": "VIEW EVENT",
+    "special": {
+      "gala": {
+        "badge": "Past Event",
+        "title": "Run Club Summer Gala & Fundraiser",
+        "when": "August 14 · 6:30 – 8:30 PM",
+        "text": "An evening bringing the Ánimo community together to celebrate and raise funds for the club.",
+        "place": "Private address · Sag Harbor",
+        "options": "Formal dress code recommended",
+        "link": "VIEW EVENT"
+      },
+      "halloween": {
+        "badge": "Special",
+        "title": "Run Club x 11937 Fitness Present: Jenny's Halloween Shakeout Run",
+        "when": "October 30 · 5:30 – 7:30 PM",
+        "text": "A festive shakeout run presented by Ánimo Run Club and 11937 Fitness.",
+        "place": "11937 Fitness Inc · 79 Newtown Lane, East Hampton, NY 11937",
+        "options": "Halloween Fitness Vibes",
+        "link": "VIEW EVENT"
+      }
+    },
+    "special_title": "SPECIAL EVENTS"
   },
   "page_layout": {
     "cart_heading": "CART",

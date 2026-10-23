@@ -87,8 +87,16 @@ function CollectionItem({
 
   return (
     <div className="collection-preview">
+      <span className="collection-preview-badge">New Collection</span>
       <div className="collection-preview-header">
-        <h2 id={headingId}>{collection.title}</h2>
+        <div className="collection-preview-heading">
+          <h2 id={headingId}>{collection.title}</h2>
+          {collection.description && (
+            <p className="collection-preview-subtitle">
+              {collection.description}
+            </p>
+          )}
+        </div>
         <Link
           to={to}
           prefetch="intent"
@@ -118,11 +126,16 @@ function CollectionItem({
                 alt=""
                 data={image}
                 loading={index === 0 && i < 3 ? 'eager' : 'lazy'}
-                sizes="(min-width: 45em) 31vw, 83vw"
+                sizes="(min-width: 45em) 26vw, 100vw"
               />
             </Link>
           ))}
         </PhotoCarousel>
+      )}
+      {images.length > 1 && (
+        <p className="collection-preview-caption">
+          Swipe to explore • {collection.title}
+        </p>
       )}
     </div>
   );
