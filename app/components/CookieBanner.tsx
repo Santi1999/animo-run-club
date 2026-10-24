@@ -57,7 +57,7 @@ export function CookieBanner({onOpenSettings, recheckTrigger}: CookieBannerProps
   };
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+    <div className="cookie-banner fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <p className="text-xs sm:text-sm text-gray-700 leading-relaxed flex-1">
           <Trans

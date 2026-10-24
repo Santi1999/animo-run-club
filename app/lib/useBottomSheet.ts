@@ -1,21 +1,44 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 
-/** How much of the sheet stays visible while collapsed. */
-export const SHEET_PEEK_HEIGHT = '28vh';
+/**
+ * How much of the sheet stays visible while collapsed: exactly its header
+ * (the drag handle), so the header's last element (the add-to-bag button)
+ * sits flush with the bottom and nothing below it can peek out. The hook
+ * measures the header and writes it to `--sheet-peek` on the sheet's
+ * container, where the gallery reads it too; the fallback (the usual header
+ * height) only covers the first paint.
+ */
+export const SHEET_PEEK = 'var(--sheet-peek, 12.25rem)';
 
-/** Snap animation: gentle ease-out so the sheet settles instead of snapping. */
-export const SHEET_TRANSITION_MS = 600;
-export const SHEET_EASING = 'cubic-bezier(0.25,0.8,0.25,1)';
+/**
+ * Snap animation: a fast start that carries the finger's momentum, then a long
+ * deceleration so the sheet glides into place (the iOS sheet curve).
+ */
+export const SHEET_TRANSITION_MS = 500;
+export const SHEET_EASING = 'cubic-bezier(0.32,0.72,0,1)';
+export const SHEET_TRANSITION = `transform ${SHEET_TRANSITION_MS}ms ${SHEET_EASING}, border-radius ${SHEET_TRANSITION_MS}ms ${SHEET_EASING}`;
 
 /** Minimum drag distance (px) that counts as a swipe. */
 const DRAG_THRESHOLD = 60;
 
 /** Release speed (px/ms) that counts as a flick regardless of distance. */
-const FLICK_VELOCITY = 0.5;
+const FLICK_VELOCITY = 0.4;
+
+/** A finger that rests this long (ms) before lifting isn't flicking. */
+const FLICK_STALE_MS = 100;
+
+/** Diminishing pull past the collapsed position, so the sheet gives instead of stopping dead. */
+function rubberband(overshoot: number) {
+  return 80 * (1 - 1 / (overshoot / 160 + 1));
+}
 
 function sheetTransform(expanded: boolean) {
-  return expanded ? 'translateY(0)' : `translateY(calc(100% - ${SHEET_PEEK_HEIGHT}))`;
+  return expanded ? 'translateY(0)' : `translateY(calc(100% - ${SHEET_PEEK}))`;
 }
+
+// Measure before paint on the client; plain effect on the server (no warning)
+const useIsomorphicLayoutEffect =
+  typeof document === 'undefined' ? useEffect : useLayoutEffect;
 
 /**
  * Drag-to-expand behaviour for a bottom sheet. Supports touch and mouse.
@@ -31,9 +54,15 @@ export function useBottomSheet() {
   const handleRef = useRef<HTMLDivElement>(null);
   const expandedRef = useRef(false);
   const [expanded, setExpandedState] = useState(false);
+  // Whether the sheet's body is laid out. It stays mounted but is hidden while
+  // collapsed: clipped overflow inside the transformed sheet otherwise gets its
+  // own scroll layer on iOS, which can swallow swipes meant for the gallery.
+  const [contentShown, setContentShown] = useState(false);
 
   const drag = useRef({
     active: false,
+    // 'pending': expanded sheet, waiting for the first move to pick a direction
+    mode: 'sheet' as 'pending' | 'sheet' | 'scroll',
     startY: 0,
     startOffset: 0,
     offset: 0,
@@ -41,11 +70,41 @@ export function useBottomSheet() {
     lastT: 0,
     velocity: 0,
     raf: 0,
+    // Pending "hide the body once collapsed" timer
+    hideTimer: 0 as ReturnType<typeof setTimeout> | 0,
+    // Last measured collapsed header height (px); 0 until first measured
+    peek: 0,
   });
 
   const setExpanded = useCallback((value: boolean) => {
     expandedRef.current = value;
     setExpandedState(value);
+  }, []);
+
+  /**
+   * Sync `--sheet-peek` with the header's height. Only while collapsed and at
+   * rest: expanded, the header also shows the options, and mid-gesture or
+   * mid-snap it may still be resizing.
+   */
+  const syncPeek = useCallback(() => {
+    const sheet = sheetRef.current;
+    const handle = handleRef.current;
+    const container = sheet?.parentElement;
+    const d = drag.current;
+    if (!sheet || !handle || !container) return;
+    if (expandedRef.current || d.active || d.hideTimer) return;
+    const peek = handle.offsetHeight;
+    if (peek === d.peek) return;
+    const firstMeasure = d.peek === 0;
+    d.peek = peek;
+    // Jump straight to the first measurement rather than gliding from the
+    // fallback; later changes (fonts loading, rotation) glide as usual.
+    if (firstMeasure) sheet.style.transition = 'none';
+    container.style.setProperty('--sheet-peek', `${peek}px`);
+    if (firstMeasure) {
+      void sheet.offsetHeight;
+      sheet.style.transition = SHEET_TRANSITION;
+    }
   }, []);
 
   const applyOffset = useCallback((offset: number) => {
@@ -72,7 +131,14 @@ export function useBottomSheet() {
     d.lastT = performance.now();
     d.velocity = 0;
     d.active = true;
+    d.mode = expandedRef.current ? 'pending' : 'sheet';
     sheet.style.transition = 'none';
+    // Lay the body out now, before any snap animation starts, and cancel a
+    // hide still pending from the last collapse: grabbing the sheet again
+    // within that window would otherwise blank the body mid-gesture.
+    clearTimeout(d.hideTimer);
+    d.hideTimer = 0;
+    setContentShown(true);
   }, []);
 
   /** Returns true when the move was consumed as a sheet drag. */
@@ -80,7 +146,18 @@ export function useBottomSheet() {
     (y: number) => {
       const sheet = sheetRef.current;
       const d = drag.current;
-      if (!d.active || !sheet) return false;
+      if (!d.active || !sheet || d.mode === 'scroll') return false;
+
+      const delta = y - d.startY;
+      if (d.mode === 'pending') {
+        // Expanded: pulling the header down closes the sheet no matter how far
+        // the details are scrolled; pushing it up scrolls them natively. This
+        // must be decided on the first move, while the browser can still be
+        // stopped from starting its own scroll.
+        if (delta === 0) return false;
+        d.mode = delta > 0 ? 'sheet' : 'scroll';
+        if (d.mode === 'scroll') return false;
+      }
 
       const now = performance.now();
       const dt = now - d.lastT;
@@ -91,20 +168,14 @@ export function useBottomSheet() {
       d.lastY = y;
       d.lastT = now;
 
-      if (expandedRef.current && sheet.scrollTop > 0) {
-        // Content is scrolling natively; restart the drag from here so the
-        // sheet doesn't jump if the user reaches the top mid-gesture.
-        d.startY = y;
-        d.startOffset = 0;
-        return false;
-      }
-
-      const delta = y - d.startY;
-      if (expandedRef.current && delta <= 0) {
-        applyOffset(0);
-        return false;
-      }
-      applyOffset(Math.min(Math.max(0, d.startOffset + delta), sheet.offsetHeight));
+      const collapsedOffset =
+        sheet.offsetHeight - (d.peek || handleRef.current?.offsetHeight || 0);
+      const offset = Math.max(0, d.startOffset + delta);
+      applyOffset(
+        offset > collapsedOffset
+          ? collapsedOffset + rubberband(offset - collapsedOffset)
+          : offset,
+      );
       return true;
     },
     [applyOffset],
@@ -119,7 +190,13 @@ export function useBottomSheet() {
       d.raf = 0;
     }
     const sheet = sheetRef.current;
+    if (d.mode !== 'sheet') {
+      // A tap or a native scroll: the sheet never moved
+      if (sheet) sheet.style.transition = SHEET_TRANSITION;
+      return;
+    }
     const moved = d.offset - d.startOffset;
+    if (performance.now() - d.lastT > FLICK_STALE_MS) d.velocity = 0;
 
     let next = expandedRef.current;
     if (next) {
@@ -130,14 +207,38 @@ export function useBottomSheet() {
 
     if (sheet) {
       // Start the snap from the exact current position, then hand control back
-      // to the CSS transition.
+      // to the CSS transition. The transition is restored explicitly: React
+      // won't rewrite an inline style whose value it thinks is unchanged, so
+      // clearing it here would leave every later snap un-animated.
       sheet.style.transform = `translate3d(0, ${d.offset}px, 0)`;
       void sheet.offsetHeight;
-      sheet.style.transition = '';
+      sheet.style.transition = SHEET_TRANSITION;
       sheet.style.transform = sheetTransform(next);
+      if (!next) {
+        // Once it's tucked away, rewind the details so it reopens at the top
+        d.hideTimer = setTimeout(() => {
+          d.hideTimer = 0;
+          if (expandedRef.current || d.active) return;
+          sheet.scrollTop = 0;
+          setContentShown(false);
+          // The header may have changed while expanded (e.g. a new variant)
+          syncPeek();
+        }, SHEET_TRANSITION_MS);
+      }
     }
     setExpanded(next);
-  }, [setExpanded]);
+  }, [setExpanded, syncPeek]);
+
+  useEffect(() => () => clearTimeout(drag.current.hideTimer), []);
+
+  useIsomorphicLayoutEffect(() => {
+    const handle = handleRef.current;
+    if (!handle) return;
+    syncPeek();
+    const observer = new ResizeObserver(syncPeek);
+    observer.observe(handle);
+    return () => observer.disconnect();
+  }, [syncPeek]);
 
   useEffect(() => {
     const handle = handleRef.current;
@@ -185,6 +286,7 @@ export function useBottomSheet() {
     sheetRef,
     handleRef,
     expanded,
+    contentShown,
     mouseHandlers,
     sheetTransform: sheetTransform(expanded),
   };

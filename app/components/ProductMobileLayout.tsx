@@ -1,3 +1,4 @@
+import {Footer} from '~/components/Footer';
 import {ProductAccordion} from '~/components/ProductAccordion';
 import {ProductAddToCart} from '~/components/ProductAddToCart';
 import {ProductBottomSheet} from '~/components/ProductBottomSheet';
@@ -11,7 +12,7 @@ import {ProductRecommendations} from '~/components/ProductRecommendations';
 import type {ProductLayoutProps} from '~/lib/product';
 import {
   SHEET_EASING,
-  SHEET_PEEK_HEIGHT,
+  SHEET_PEEK,
   SHEET_TRANSITION_MS,
 } from '~/lib/useBottomSheet';
 
@@ -28,19 +29,21 @@ export function ProductMobileLayout({
 
   return (
     <div
-      className="lg:hidden flex flex-col"
+      className="product-mobile-layout lg:hidden flex flex-col"
       style={{height: 'calc(100dvh - var(--header-height))'}}
     >
       <ProductBreadcrumb
         title={product.title}
         collection={collection}
-        className="flex-shrink-0 gap-1.5 px-4 py-1.5 border-b border-black/10 text-[8px] tracking-widest"
+        // touch-none: a drag starting here mustn't move the (locked) page
+        className="flex-shrink-0 touch-none gap-1.5 px-4 py-1.5 border-b border-black/10 text-[8px] tracking-widest"
       />
 
       <div className="flex-1 relative overflow-hidden">
-        <ProductGalleryCarousel images={images} bottomInset={SHEET_PEEK_HEIGHT} />
+        <ProductGalleryCarousel images={images} bottomInset={SHEET_PEEK} />
 
         <ProductBottomSheet
+          footer={<Footer />}
           header={(expanded) => (
             <>
               {collection && (

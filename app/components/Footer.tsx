@@ -1,15 +1,25 @@
 import {ChevronDown} from 'lucide-react';
-import {useState} from 'react';
+import {createContext, useContext, useState} from 'react';
 import {Link, useFetcher, useLocation} from 'react-router';
 import {Trans, useTranslation} from 'react-i18next';
-import {useLocalePrefix} from '~/lib/i18n';
+import {
+  LANGUAGES,
+  languageFromPath,
+  localizePath,
+  rememberLanguage,
+  useLocalePrefix,
+} from '~/lib/i18n';
 
-export function Footer({
-  onOpenCookieSettings,
-}: {
-  onOpenCookieSettings?: () => void;
-}) {
+/**
+ * Opens the cookie preferences modal. Provided by `PageLayout`, which owns the
+ * modal, so the footer works wherever it's rendered (e.g. the mobile product
+ * sheet).
+ */
+export const CookieSettingsContext = createContext<() => void>(() => {});
+
+export function Footer({className = ''}: {className?: string}) {
   const {t} = useTranslation();
+  const openCookieSettings = useContext(CookieSettingsContext);
   const localePrefix = useLocalePrefix();
   const [openSection, setOpenSection] = useState<string | null>(null);
   const newsletter = useFetcher<{success?: boolean; error?: string}>();
@@ -21,7 +31,7 @@ export function Footer({
   };
 
   return (
-    <footer className="bg-[#f8f8f8] border-t border-gray-200">
+    <footer className={`bg-[#f8f8f8] border-t border-gray-200 ${className}`}>
       {/* Main Footer Content */}
       <div className="px-8 sm:px-12 lg:px-16 py-12 lg:py-16">
         <div className="flex flex-col lg:flex-row lg:justify-between gap-8 lg:gap-16">
@@ -347,7 +357,7 @@ export function Footer({
                 <li>
                   <button
                     type="button"
-                    onClick={onOpenCookieSettings}
+                    onClick={openCookieSettings}
                     className="hover:opacity-70 transition-opacity text-left"
                   >
                     {t('footer.cookie_setting')}
@@ -430,20 +440,9 @@ export function Footer({
   );
 }
 
-const LANGUAGES = [
-  {prefix: '', label: 'EN', locale: 'EN-US'},
-  {prefix: '/ES-US', label: 'ES', locale: 'ES-US'},
-];
-
 function FooterLanguageSwitcher() {
   const {pathname, search} = useLocation();
-
-  const firstSegment = pathname.split('/')[1]?.toUpperCase() ?? '';
-  const hasLocalePrefix = /^[A-Z]{2}-[A-Z]{2}$/.test(firstSegment);
-  const currentLocale = hasLocalePrefix ? firstSegment : 'EN-US';
-  const pathWithoutLocale = hasLocalePrefix
-    ? '/' + pathname.split('/').slice(2).join('/')
-    : pathname;
+  const currentLanguage = languageFromPath(pathname);
 
   return (
     <div className="flex items-center gap-2">
@@ -462,13 +461,14 @@ function FooterLanguageSwitcher() {
       </svg>
       <div className="flex items-center gap-1 text-xs font-semibold tracking-wide">
         {LANGUAGES.map((lang, i) => (
-          <span key={lang.locale} className="flex items-center gap-1">
+          <span key={lang.code} className="flex items-center gap-1">
             {i > 0 && <span className="text-gray-400">|</span>}
-            {lang.locale === currentLocale ? (
+            {lang.code === currentLanguage ? (
               <span>{lang.label}</span>
             ) : (
               <Link
-                to={`${lang.prefix}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}${search}`}
+                to={localizePath(pathname, lang.code) + search}
+                onClick={() => rememberLanguage(lang.code)}
                 className="text-gray-400 hover:text-black transition-colors"
               >
                 {lang.label}

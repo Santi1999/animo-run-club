@@ -1,6 +1,7 @@
 import * as serverBuild from 'virtual:react-router/server-build';
 import {createRequestHandler, storefrontRedirect} from '@shopify/hydrogen';
 import {createHydrogenRouterContext} from '~/lib/context';
+import {getLanguageRedirect, languageCookieRefresh} from '~/lib/i18n.server';
 
 /**
  * Export a fetch handler in module format.
@@ -12,6 +13,10 @@ export default {
     executionContext: ExecutionContext,
   ): Promise<Response> {
     try {
+      // Open pages in the visitor's language (their pick, else their phone's)
+      const languageRedirect = getLanguageRedirect(request);
+      if (languageRedirect) return languageRedirect;
+
       const hydrogenContext = await createHydrogenRouterContext(
         request,
         env,
@@ -35,6 +40,14 @@ export default {
           'Set-Cookie',
           await hydrogenContext.session.commit(),
         );
+      }
+
+      const languageCookie = languageCookieRefresh(request);
+      if (
+        languageCookie &&
+        response.headers.get('Content-Type')?.startsWith('text/html')
+      ) {
+        response.headers.append('Set-Cookie', languageCookie);
       }
 
       if (response.status === 404) {
