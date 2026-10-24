@@ -42,7 +42,7 @@ export function Header({
 
   return (
     <header
-      className="header"
+      className={solid ? 'header header--scrolled' : 'header'}
       style={
         solid
           ? {
@@ -100,12 +100,38 @@ export function HeaderMenu({
 }) {
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
+  const {t} = useTranslation();
   const localePrefix = useLocalePrefix();
 
   return (
     <nav className={className} role="navigation">
+      <NavLink
+        className="header-menu-item"
+        end
+        onClick={close}
+        prefetch="intent"
+        to={`${localePrefix}/`}
+      >
+        {t('header.home')}
+      </NavLink>
+      <NavLink
+        className="header-menu-item"
+        onClick={close}
+        prefetch="intent"
+        to={`${localePrefix}/collections`}
+      >
+        {t('header.collections')}
+      </NavLink>
+      <NavLink
+        className="header-menu-item"
+        onClick={close}
+        prefetch="intent"
+        to={`${localePrefix}/events`}
+      >
+        {t('header.events')}
+      </NavLink>
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
-        if (!item.url) return null;
+        if (!item.url || /\/collections\/?$/.test(item.url)) return null;
 
         const pathname =
           item.url.includes('myshopify.com') ||
@@ -113,6 +139,7 @@ export function HeaderMenu({
           item.url.includes(primaryDomainUrl)
             ? new URL(item.url).pathname
             : item.url;
+        if (pathname === '/' || pathname === '') return null;
         const url = pathname.startsWith('/') ? `${localePrefix}${pathname}` : pathname;
         return (
           <NavLink

@@ -43,3 +43,48 @@ export function useLocalePrefix(): string {
   const hasLocalePrefix = /^[A-Z]{2}-[A-Z]{2}$/.test(firstSegment);
   return hasLocalePrefix ? `/${firstSegment}` : '';
 }
+
+/** Languages the UI is translated into; English is the unprefixed default. */
+export const LANGUAGES = [
+  {code: 'en', label: 'EN', prefix: ''},
+  {code: 'es', label: 'ES', prefix: '/ES-US'},
+] as const;
+
+export type LanguageCode = (typeof LANGUAGES)[number]['code'];
+
+/**
+ * Cookie holding the language a visitor picked in a language switcher. It
+ * beats their browser's language when choosing which version to show (see
+ * i18n.server.ts).
+ */
+export const LANGUAGE_COOKIE = 'lang';
+export const LANGUAGE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+
+export function isLanguageCode(value: unknown): value is LanguageCode {
+  return LANGUAGES.some((language) => language.code === value);
+}
+
+/** The UI language a path is shown in, from its locale prefix. */
+export function languageFromPath(pathname: string): LanguageCode {
+  const firstSegment = pathname.split('/')[1]?.toUpperCase() ?? '';
+  const match = LANGUAGES.find(
+    (language) => language.prefix && language.prefix.slice(1) === firstSegment,
+  );
+  return match?.code ?? 'en';
+}
+
+/** `pathname` in another language: its locale prefix swapped for that language's. */
+export function localizePath(pathname: string, language: LanguageCode) {
+  const [, firstSegment = '', ...rest] = pathname.split('/');
+  const path = /^[A-Z]{2}-[A-Z]{2}$/i.test(firstSegment)
+    ? '/' + rest.join('/')
+    : pathname;
+  const prefix = LANGUAGES.find(({code}) => code === language)?.prefix ?? '';
+  if (!prefix) return path;
+  return path === '/' ? prefix : prefix + path;
+}
+
+/** Remember a language picked in a switcher, so later visits open in it. */
+export function rememberLanguage(language: LanguageCode) {
+  document.cookie = `${LANGUAGE_COOKIE}=${language}; Max-Age=${LANGUAGE_COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
+}

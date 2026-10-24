@@ -5,5 +5,8 @@ node_modules
 /public/build
 /.mf
 .env
+.dev.vars
+.wrangler
 .shopify
 .react-router
+tsconfig.tsbuildinfo

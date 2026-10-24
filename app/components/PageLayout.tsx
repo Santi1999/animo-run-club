@@ -1,19 +1,34 @@
-import {Await, NavLink, useLocation} from 'react-router';
-import {Suspense, useState} from 'react';
+import {Await, NavLink, useLocation, useMatches} from 'react-router';
+import {Suspense, useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import type {CartApiQueryFragment, HeaderQuery} from 'storefrontapi.generated';
 import {Aside, useAside} from '~/components/Aside';
-import {useLocalePrefix} from '~/lib/i18n';
-import {Footer} from '~/components/Footer';
+import {
+  LANGUAGES,
+  languageFromPath,
+  localizePath,
+  rememberLanguage,
+  useLocalePrefix,
+} from '~/lib/i18n';
+import {CookieSettingsContext, Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
 import {CookieBanner} from '~/components/CookieBanner';
 import {CookieModal} from '~/components/CookieModal';
 import {SearchFormPredictive} from '~/components/SearchFormPredictive';
 
+type SearchCollection = {id: string; title: string; handle: string};
+
+/** Optional `handle` a route can export to adjust the shared layout. */
+export type LayoutRouteHandle = {
+  /** The route renders the footer itself below `lg`, so hide the page's own there. */
+  ownsMobileFooter?: boolean;
+};
+
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
   header: HeaderQuery;
+  collections: SearchCollection[];
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
   children?: React.ReactNode;
@@ -23,34 +38,45 @@ export function PageLayout({
   cart,
   children = null,
   header,
+  collections,
   isLoggedIn,
   publicStoreDomain,
 }: PageLayoutProps) {
   const [cookieModalOpen, setCookieModalOpen] = useState(false);
+  const openCookieSettings = useCallback(() => setCookieModalOpen(true), []);
+  const ownsMobileFooter = useMatches().some(
+    (match) =>
+      (match.handle as LayoutRouteHandle | undefined)?.ownsMobileFooter,
+  );
 
   return (
     <Aside.Provider>
-      <CartAside cart={cart} />
-      <SearchAside />
-      <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
-      {header && (
-        <Header
+      <CookieSettingsContext.Provider value={openCookieSettings}>
+        <CartAside cart={cart} />
+        <SearchAside collections={collections} />
+        <MobileMenuAside
           header={header}
-          cart={cart}
-          isLoggedIn={isLoggedIn}
           publicStoreDomain={publicStoreDomain}
         />
-      )}
-      <main style={{paddingTop: 'var(--header-height)'}}>{children}</main>
-      <Footer onOpenCookieSettings={() => setCookieModalOpen(true)} />
-      <CookieBanner
-        onOpenSettings={() => setCookieModalOpen(true)}
-        recheckTrigger={cookieModalOpen}
-      />
-      <CookieModal
-        isOpen={cookieModalOpen}
-        onClose={() => setCookieModalOpen(false)}
-      />
+        {header && (
+          <Header
+            header={header}
+            cart={cart}
+            isLoggedIn={isLoggedIn}
+            publicStoreDomain={publicStoreDomain}
+          />
+        )}
+        <main style={{paddingTop: 'var(--header-height)'}}>{children}</main>
+        <Footer className={ownsMobileFooter ? 'max-lg:hidden' : ''} />
+        <CookieBanner
+          onOpenSettings={openCookieSettings}
+          recheckTrigger={cookieModalOpen}
+        />
+        <CookieModal
+          isOpen={cookieModalOpen}
+          onClose={() => setCookieModalOpen(false)}
+        />
+      </CookieSettingsContext.Provider>
     </Aside.Provider>
   );
 }
@@ -70,9 +96,10 @@ function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
   );
 }
 
-function SearchAside() {
+function SearchAside({collections}: {collections: SearchCollection[]}) {
   const {type, close} = useAside();
   const {t} = useTranslation();
+  const localePrefix = useLocalePrefix();
   const isOpen = type === 'search';
 
   return (
@@ -97,19 +124,42 @@ function SearchAside() {
             />
           )}
         </SearchFormPredictive>
-        <button className="search-overlay-close reset" onClick={close}>
-          {t('page_layout.close')}
+        <button
+          className="search-overlay-close reset"
+          onClick={close}
+          aria-label={t('page_layout.close')}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="M4 4l12 12M16 4L4 16" />
+          </svg>
         </button>
       </div>
 
       <div className="search-overlay-body">
         <div className="search-overlay-section">
           <h3 className="search-overlay-section-title">{t('page_layout.collections')}</h3>
-          <p className="search-overlay-coming-soon">{t('page_layout.coming_soon')}</p>
-        </div>
-        <div className="search-overlay-section">
-          <h3 className="search-overlay-section-title">{t('page_layout.highlights')}</h3>
-          <p className="search-overlay-coming-soon">{t('page_layout.coming_soon')}</p>
+          <ul className="search-overlay-list">
+            {collections.map((collection) => (
+              <li key={collection.id}>
+                <NavLink
+                  to={`${localePrefix}/collections/${collection.handle}`}
+                  className="search-overlay-link"
+                  onClick={close}
+                >
+                  {collection.title}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
@@ -271,20 +321,9 @@ function MobileMenuAside({
   );
 }
 
-const LANGUAGES = [
-  {prefix: '', label: 'EN', locale: 'EN-US'},
-  {prefix: '/ES-US', label: 'ES', locale: 'ES-US'},
-];
-
 function LanguageSwitcher({onNavigate}: {onNavigate: () => void}) {
   const {pathname, search} = useLocation();
-
-  const firstSegment = pathname.split('/')[1]?.toUpperCase() ?? '';
-  const hasLocalePrefix = /^[A-Z]{2}-[A-Z]{2}$/.test(firstSegment);
-  const currentLocale = hasLocalePrefix ? firstSegment : 'EN-US';
-  const pathWithoutLocale = hasLocalePrefix
-    ? '/' + pathname.split('/').slice(2).join('/')
-    : pathname;
+  const currentLanguage = languageFromPath(pathname);
 
   return (
     <div className="mobile-menu-footer-item mobile-menu-footer-lang">
@@ -304,14 +343,17 @@ function LanguageSwitcher({onNavigate}: {onNavigate: () => void}) {
       </svg>
       <div className="flex items-center gap-1">
         {LANGUAGES.map((lang, i) => (
-          <span key={lang.locale} className="flex items-center gap-1">
+          <span key={lang.code} className="flex items-center gap-1">
             {i > 0 && <span className="text-gray-300">|</span>}
-            {lang.locale === currentLocale ? (
+            {lang.code === currentLanguage ? (
               <span className="font-semibold">{lang.label}</span>
             ) : (
               <NavLink
-                to={`${lang.prefix}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}${search}`}
-                onClick={onNavigate}
+                to={localizePath(pathname, lang.code) + search}
+                onClick={() => {
+                  rememberLanguage(lang.code);
+                  onNavigate();
+                }}
                 className="opacity-50 hover:opacity-100 transition-opacity"
               >
                 {lang.label}

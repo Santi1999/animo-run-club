@@ -20,9 +20,57 @@
     "built_by": "Creado por"
   },
   "header": {
+    "home": "Inicio",
+    "collections": "Colecciones",
+    "events": "Carreras",
     "open_menu": "Abrir menú",
     "search": "Buscar",
     "cart": "Carrito ({{count}} artículos)"
+  },
+  "events": {
+    "title": "CARRERAS Y CAMINATAS SOCIALES",
+    "intro": "Únete cada domingo a nuestras Carreras y Caminatas Sociales, donde cada ritmo es bienvenido y la comunidad es primero. Descubre nuestras próximas carreras, salidas grupales, caminatas y actividades comunitarias. Seas un corredor experimentado o apenas estés empezando, siempre hay un lugar para ti en",
+    "club_name": "[ÁNIMO] RUN CLUB.",
+    "cta": "Únete a nuestra próxima carrera",
+    "slogan_line_1": "Cada paso cuenta.",
+    "slogan_line_2": "Cada historia importa.",
+    "slogan_cta": "¡ÁNIMO!",
+    "social_heading": "CARRERAS Y CAMINATAS SOCIALES",
+    "social_badge": "Social",
+    "races_heading": "PRÓXIMAS CARRERAS",
+    "races_badge": "Próximas Carreras",
+    "community_heading": "CARRERAS COMUNITARIAS",
+    "community_badge": "Comunidad",
+    "special_heading": "EVENTOS ESPECIALES",
+    "special_badge": "Especial",
+    "when": "Todos los domingos · 9:30 AM",
+    "event_title": "Carrera y Caminata Social del Domingo",
+    "event_text": "Únete a una mañana de movimiento, conexión y comunidad. Elige tu ritmo y disfruta el camino con nosotros.",
+    "meeting_point": "Long Island, Nueva York",
+    "options": "Carrera/caminata comunitaria de 5K · Todos los ritmos",
+    "location_link": "ENLACE DE UBICACIÓN",
+    "register_link": "VER EVENTO",
+    "special": {
+      "gala": {
+        "badge": "Evento pasado",
+        "title": "Run Club Summer Gala & Fundraiser",
+        "when": "14 de agosto · 6:30 – 8:30 PM",
+        "text": "Una noche que reunió a la comunidad Ánimo para celebrar y recaudar fondos para el club.",
+        "place": "Dirección privada · Sag Harbor",
+        "options": "Se recomienda vestimenta formal",
+        "link": "VER EVENTO"
+      },
+      "halloween": {
+        "badge": "Especial",
+        "title": "Run Club x 11937 Fitness Present: Jenny's Halloween Shakeout Run",
+        "when": "30 de octubre · 5:30 – 7:30 PM",
+        "text": "Una carrera de calentamiento festiva presentada por Ánimo Run Club y 11937 Fitness.",
+        "place": "11937 Fitness Inc · 79 Newtown Lane, East Hampton, NY 11937",
+        "options": "Ambiente fitness de Halloween",
+        "link": "VER EVENTO"
+      }
+    },
+    "special_title": "EVENTOS ESPECIALES"
   },
   "page_layout": {
     "cart_heading": "CARRITO",
@@ -376,5 +424,32 @@
   },
   "error": {
     "title": "Ups"
+  },
+  "product": {
+    "breadcrumb_home": "Inicio",
+    "breadcrumb_collections": "Colecciones",
+    "brand": "[ÁNIMO] Run Club",
+    "select_option": "Selecciona {{option}}",
+    "add_to_bag": "Añadir a la bolsa",
+    "sold_out": "Agotado",
+    "tax_note": "Impuestos incluidos. Envío gratis en pedidos superiores a $150.",
+    "shipping_returns": "Envíos y devoluciones",
+    "materials_care": "Materiales y cuidado",
+    "product_care": "Cuidado del producto",
+    "specifications": "Especificaciones",
+    "spec": {
+      "capacity": "Capacidad",
+      "dimensions": "Dimensiones",
+      "color-pattern": "Color",
+      "fabric": "Tela",
+      "headwear-features": "Características",
+      "target-gender": "Género"
+    },
+    "our_commitment": "Nuestro compromiso",
+    "our_commitment_text": "Producido con prácticas de manufactura sostenibles y menor consumo de agua. Colaboramos con comunidades de corredores en México para preservar elementos de diseño tradicionales mientras apoyamos a las economías locales. El 2% de cada venta apoya programas deportivos juveniles que promueven la salud y el bienestar.",
+    "you_may_also_like": "También te puede gustar",
+    "scroll_left": "Desplazar a la izquierda",
+    "scroll_right": "Desplazar a la derecha",
+    "ref": "Ref. {{sku}}"
   }
 }
