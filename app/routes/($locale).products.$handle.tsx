@@ -18,6 +18,10 @@ import {
   getGalleryImages,
 } from '~/lib/product';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import type {LayoutRouteHandle} from '~/components/PageLayout';
+
+// The mobile layout fills the screen and shows the footer inside its sheet
+export const handle: LayoutRouteHandle = {ownsMobileFooter: true};
 
 export const meta: Route.MetaFunction = ({data}) => {
   const product = data?.product;

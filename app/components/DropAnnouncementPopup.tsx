@@ -106,14 +106,14 @@ export function DropAnnouncementPopup({
         />
 
         {/* Content */}
-        <div className="px-8 py-8 text-center">
+        <div className="px-6 sm:px-8 py-8 text-center">
           <h2
             id="drop-popup-heading"
             className="text-xl font-bold tracking-wide uppercase mb-2"
           >
             Something big is dropping soon
           </h2>
-          <p className="text-sm text-gray-600 mb-6 pb-5">
+          <p className="text-sm text-gray-600 mb-6 sm:pb-5">
             {/* Edit this line when the date / product name is confirmed */}
             Stay tuned — details coming soon.
           </p>
@@ -128,21 +128,26 @@ export function DropAnnouncementPopup({
               action="/newsletter/subscribe"
               onSubmit={() => setSeenCookie()}
             >
-              <div className="flex items-center border-b border-black pb-1">
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
-                  title="Please enter a valid email address"
-                  placeholder="Insert your e-mail address *"
-                  onChange={(e) => setEmailValid(EMAIL_PATTERN.test(e.target.value))}
-                  className="drop-popup-email-input flex-1 bg-transparent text-sm placeholder:text-gray-500"
-                />
+              {/* Phones: the field gets the full width (its placeholder won't fit
+                  beside the button) with a full-width button below. sm and up:
+                  the button sits inline at the end of the underline. */}
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-2 sm:border-b sm:border-black sm:pb-1">
+                <div className="flex-1 min-w-0 border-b border-black pb-1 sm:border-b-0 sm:pb-0">
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+                    title="Please enter a valid email address"
+                    placeholder="Insert your e-mail address *"
+                    onChange={(e) => setEmailValid(EMAIL_PATTERN.test(e.target.value))}
+                    className="drop-popup-email-input w-full bg-transparent text-sm placeholder:text-gray-500"
+                  />
+                </div>
                 <button
                   type="submit"
                   disabled={newsletter.state === 'submitting'}
-                  className={`ml-2 shrink-0 whitespace-nowrap border text-xs font-semibold tracking-widest uppercase px-4 py-2 transition-colors disabled:opacity-50 ${
+                  className={`w-full sm:w-auto shrink-0 whitespace-nowrap border text-xs font-semibold tracking-widest uppercase px-4 py-3 sm:py-2 transition-colors disabled:opacity-50 ${
                     emailValid
                       ? 'bg-black text-white border-black'
                       : 'bg-transparent text-gray-400 border-gray-300'

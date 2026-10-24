@@ -123,6 +123,28 @@ img {
   }
 }
 
+/* The mobile product page is a full-screen gallery + bottom sheet (shown
+   below `lg`), so the page itself mustn't scroll or rubber-band when a drag
+   starts on the header or breadcrumb. iOS still rubber-bands the page despite
+   overflow/overscroll-behavior, so drags that start on the fixed chrome are
+   switched off outright (taps still work); the breadcrumb and gallery handle
+   their own part in ProductMobileLayout / ProductGallery. */
+@media (max-width: 63.99rem) {
+  html:has(.product-mobile-layout) {
+    overflow: hidden;
+  }
+
+  html:has(.product-mobile-layout),
+  html:has(.product-mobile-layout) body {
+    overscroll-behavior: none;
+  }
+
+  html:has(.product-mobile-layout) .header,
+  html:has(.product-mobile-layout) .cookie-banner {
+    touch-action: none;
+  }
+}
+
 aside {
   background: var(--color-light);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
