@@ -9,3 +9,4 @@ node_modules
 .wrangler
 .shopify
 .react-router
+tsconfig.tsbuildinfo

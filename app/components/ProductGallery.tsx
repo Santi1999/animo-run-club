@@ -4,17 +4,31 @@ import {ProductImage} from '~/components/ProductImage';
 
 type GalleryImage = NonNullable<ProductVariantFragment['image']>;
 
-/** Desktop: all product images stacked vertically. */
+/**
+ * Desktop: all product images stacked vertically at their own aspect ratio,
+ * so tall full-body shots aren't cropped. Each image is capped so its height
+ * fits the viewport below the header, the breadcrumb (3rem) and the column's
+ * vertical padding (5rem), otherwise wide screens push it below the fold.
+ */
 export function ProductGalleryStack({images}: {images: GalleryImage[]}) {
   return (
-    <div>
-      {images.map((image, i) => (
-        <ProductImage
-          key={image.id}
-          image={image}
-          loading={i === 0 ? 'eager' : 'lazy'}
-        />
-      ))}
+    <div className="flex flex-col gap-10 py-10">
+      {images.map((image, i) => {
+        const ratio =
+          image.width && image.height ? image.width / image.height : 3 / 4;
+        return (
+          <ProductImage
+            key={image.id}
+            image={image}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            className="mx-auto"
+            style={{
+              aspectRatio: ratio,
+              maxWidth: `calc((100vh - var(--header-height) - 8rem) * ${ratio})`,
+            }}
+          />
+        );
+      })}
     </div>
   );
 }
